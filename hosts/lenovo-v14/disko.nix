@@ -25,7 +25,7 @@
             size = "16G";
             content = {
               type = "swap";
-              resumeDevice = "/dev/disk/by-partlabel/swap";
+              resumeDevice = true;
             };
           };
           root = {
