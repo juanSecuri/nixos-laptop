@@ -12,8 +12,6 @@
     lazygit
     # Cloud CLIs
     azure-cli
-    # Vercel / Render via npm globals (also in home-manager)
-    nodePackages.vercel
     # General utilities
     curl
     wget

@@ -13,7 +13,6 @@
     mypy
     # OCR / document processing (contableIA, bookepping-cleanup-agent)
     tesseract
-    tesseract5
     poppler_utils
     qpdf
     imagemagick
