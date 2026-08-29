@@ -16,6 +16,9 @@
     poppler_utils
     qpdf
     imagemagick
+    # The Profit Catalyst — Selenium / scraping (sistema-contable-dian-siigo)
+    chromedriver
+    geckodriver
     # Native libs for Python wheels (numpy, easyocr, etc.)
     zlib
     libffi

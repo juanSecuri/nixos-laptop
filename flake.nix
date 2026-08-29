@@ -78,6 +78,28 @@
             echo "Node dev shell — pnpm monorepos"
           '';
         };
+
+        # The Profit Catalyst — FastAPI + Postgres + QBO + Supabase + Docker
+        profit-catalyst = nixpkgs.legacyPackages.${system}.mkShell {
+          packages = with nixpkgs.legacyPackages.${system}; [
+            python311
+            uv
+            ruff
+            tesseract
+            poppler_utils
+            chromedriver
+            geckodriver
+            docker-compose
+            postgresql_16
+            supabase-cli
+            gnumake
+            nodejs_22
+            nodePackages.pnpm
+          ];
+          shellHook = ''
+            echo "TPC dev shell — agente-ia-angela, bookkeeping, contable DIAN, cash-flow, allapattah, iot"
+          '';
+        };
       };
 
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-rfc-style;

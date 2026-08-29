@@ -12,6 +12,7 @@
     lazygit
     # Cloud CLIs
     azure-cli
+    gnumake
     # General utilities
     curl
     wget
