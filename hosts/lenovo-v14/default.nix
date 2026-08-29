@@ -56,8 +56,9 @@
       "video"
       "audio"
     ];
+    # Add your SSH public key before install (recommended):
+    # docs/install/00-checklist.md
     openssh.authorizedKeys.keys = [
-      # Add your public key before install:
       # "ssh-ed25519 AAAA... jloaiza10@lenovo-v14"
     ];
   };

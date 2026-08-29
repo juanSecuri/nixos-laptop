@@ -25,8 +25,7 @@
     enableRedistributableFirmware = true;
     firmware = with pkgs; [
       linux-firmware
-      # Lenovo V14 G4 ABP — Realtek RTL8852BE (Wi-Fi 6)
-      rtw89-firmware
+      # RTL8852BE (Wi-Fi 6) — firmware included in linux-firmware since nixpkgs 25.11+
     ];
     bluetooth.enable = true;
     graphics = {
@@ -43,12 +42,10 @@
   };
 
   # Laptop power / suspend
-  services.logind = {
-    lidSwitch = "suspend";
-    lidSwitchExternalPower = "ignore";
-    settings.Login = {
-      HandlePowerKey = "suspend";
-    };
+  services.logind.settings.Login = {
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchExternalPower = "ignore";
+    HandlePowerKey = "suspend";
   };
 
   boot.kernelModules = lib.mkAfter [

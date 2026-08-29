@@ -33,6 +33,6 @@
     openssh
     age
     sops
-    nixfmt-rfc-style
+    nixfmt
   ];
 }

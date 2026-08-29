@@ -6,6 +6,10 @@ result
 *~
 .DS_Store
 
+# Install logs
+nixos-install.log
+*.log
+
 # agenix secrets (never commit decrypted)
 secrets/*.age
 !secrets/*.age.example

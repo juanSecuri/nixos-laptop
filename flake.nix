@@ -52,7 +52,7 @@
       devShells.${system} = {
         default = nixpkgs.legacyPackages.${system}.mkShell {
           packages = with nixpkgs.legacyPackages.${system}; [
-            nixfmt-rfc-style
+            nixfmt
           ];
         };
 
@@ -62,7 +62,7 @@
             uv
             ruff
             tesseract
-            poppler_utils
+            poppler-utils
           ];
           shellHook = ''
             echo "Python dev shell — FastAPI / OCR projects"
@@ -86,7 +86,7 @@
             uv
             ruff
             tesseract
-            poppler_utils
+            poppler-utils
             chromedriver
             geckodriver
             docker-compose
@@ -102,6 +102,6 @@
         };
       };
 
-      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-rfc-style;
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt;
     };
 }

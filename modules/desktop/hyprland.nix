@@ -51,7 +51,7 @@
   environment.systemPackages = with pkgs; [
     catppuccin-gtk
     papirus-icon-theme
-    qt6ct
+    qt6Packages.qt6ct
     libsForQt5.qt5ct
     glib
     dconf
@@ -60,7 +60,7 @@
     playerctl
     pavucontrol
     mako
-    rofi-wayland
+    rofi
     waybar
     wofi
     grim
@@ -70,12 +70,8 @@
   ];
 
   fonts.packages = with pkgs; [
-    (nerdfonts.override {
-      fonts = [
-        "JetBrainsMono"
-        "SymbolsOnly"
-      ];
-    })
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.symbols-only
     noto-fonts
     noto-fonts-color-emoji
     font-awesome
