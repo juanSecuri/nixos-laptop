@@ -46,9 +46,9 @@
   services.logind = {
     lidSwitch = "suspend";
     lidSwitchExternalPower = "ignore";
-    extraConfig = ''
-      HandlePowerKey=suspend
-    '';
+    settings.Login = {
+      HandlePowerKey = "suspend";
+    };
   };
 
   boot.kernelModules = lib.mkAfter [
