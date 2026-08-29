@@ -23,7 +23,7 @@
   hardware = {
     cpu.amd.updateMicrocode = lib.mkDefault true;
     enableRedistributableFirmware = true;
-    firmware = with config.nixpkgs.pkgs; [
+    firmware = with pkgs; [
       linux-firmware
       # Lenovo V14 G4 ABP — Realtek RTL8852BE (Wi-Fi 6)
       rtw89-firmware

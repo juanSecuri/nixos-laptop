@@ -35,6 +35,4 @@
     sops
     nixfmt-rfc-style
   ];
-
-  programs.gh.enable = true;
 }

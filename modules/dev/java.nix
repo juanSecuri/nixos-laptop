@@ -10,8 +10,5 @@
     gradle
   ];
 
-  programs.java = {
-    enable = true;
-    package = pkgs.jdk21;
-  };
+  environment.sessionVariables.JAVA_HOME = lib.mkDefault "${pkgs.jdk21}";
 }
