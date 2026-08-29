@@ -7,7 +7,6 @@
       size = 11;
     };
     theme = "Catppuccin-Mocha";
-    shellIntegration.mode = "no-cursor";
     settings = {
       background_opacity = "0.92";
       confirm_os_window_close = 0;
