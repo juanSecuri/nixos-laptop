@@ -1,0 +1,14 @@
+result
+.direnv
+.env
+*.swp
+*.swo
+*~
+.DS_Store
+
+# agenix secrets (never commit decrypted)
+secrets/*.age
+!secrets/*.age.example
+
+# Cursor AppImage download cache
+.home-manager/cursor/

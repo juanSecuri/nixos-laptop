@@ -1,0 +1,83 @@
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  imports = [
+    inputs.hyprland.nixosModules.default
+  ];
+
+  programs.hyprland = {
+    enable = true;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    xwayland.enable = true;
+  };
+
+  services.displayManager = {
+    sddm = {
+      enable = true;
+      wayland.enable = true;
+      theme = "breeze";
+    };
+    defaultSession = "hyprland";
+  };
+
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    EDITOR = "cursor";
+    VISUAL = "cursor";
+  };
+
+  security.polkit.enable = true;
+  services.gnome.gnome-keyring.enable = true;
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+    ];
+  };
+
+  programs.dconf.enable = true;
+
+  services.udev.packages = with pkgs; [
+    gnome-settings-daemon
+  ];
+
+  environment.systemPackages = with pkgs; [
+    catppuccin-gtk
+    papirus-icon-theme
+    qt6ct
+    libsForQt5.qt5ct
+    glib
+    dconf
+    wlr-randr
+    brightnessctl
+    playerctl
+    pavucontrol
+    mako
+    rofi-wayland
+    waybar
+    wofi
+    grim
+    slurp
+    wl-clipboard
+    cliphist
+  ];
+
+  fonts.packages = with pkgs; [
+    (nerdfonts.override {
+      fonts = [
+        "JetBrainsMono"
+        "SymbolsOnly"
+      ];
+    })
+    noto-fonts
+    noto-fonts-color-emoji
+    font-awesome
+  ];
+}
