@@ -6,10 +6,10 @@
 {
   environment.systemPackages = with pkgs; [
     nodejs_22
-    nodePackages.pnpm
-    nodePackages.corepack
-    nodePackages.typescript
-    nodePackages.typescript-language-server
+    pnpm
+    corepack
+    typescript
+    typescript-language-server
     yarn
   ];
 }

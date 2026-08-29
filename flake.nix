@@ -72,7 +72,7 @@
         node = nixpkgs.legacyPackages.${system}.mkShell {
           packages = with nixpkgs.legacyPackages.${system}; [
             nodejs_22
-            nodePackages.pnpm
+            pnpm
           ];
           shellHook = ''
             echo "Node dev shell — pnpm monorepos"
@@ -94,7 +94,7 @@
             supabase-cli
             gnumake
             nodejs_22
-            nodePackages.pnpm
+            pnpm
           ];
           shellHook = ''
             echo "TPC dev shell — agente-ia-angela, bookkeeping, contable DIAN, cash-flow, allapattah, iot"
