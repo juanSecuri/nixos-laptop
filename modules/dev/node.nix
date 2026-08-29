@@ -12,6 +12,4 @@
     nodePackages.typescript-language-server
     yarn
   ];
-
-  programs.corepack.enable = true;
 }
