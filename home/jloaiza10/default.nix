@@ -1,11 +1,4 @@
-{
-  config,
-  inputs,
-  lib,
-  pkgs,
-  username,
-  ...
-}:
+{ config, lib, pkgs, ... }:
 {
   imports = [
     ./hyprland.nix
@@ -17,8 +10,8 @@
   ];
 
   home = {
-    username = username;
-    homeDirectory = "/home/${username}";
+    username = "jloaiza10";
+    homeDirectory = "/home/jloaiza10";
     stateVersion = "25.05";
   };
 

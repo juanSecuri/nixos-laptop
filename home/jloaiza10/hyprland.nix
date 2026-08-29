@@ -1,11 +1,4 @@
-{
-  config,
-  inputs,
-  lib,
-  pkgs,
-  username,
-  ...
-}:
+{ config, lib, pkgs, ... }:
 let
   accent = "#cba6f7";
   mocha = {
@@ -25,14 +18,8 @@ let
   };
 in
 {
-  imports = [
-    inputs.hyprland.homeManagerModules.default
-  ];
-
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     systemd.enable = true;
 
     settings = {
