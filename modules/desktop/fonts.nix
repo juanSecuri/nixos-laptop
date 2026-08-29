@@ -16,7 +16,7 @@
       })
       noto-fonts
       noto-fonts-color-emoji
-      cantarell
+      cantarell-fonts
     ];
   };
 }

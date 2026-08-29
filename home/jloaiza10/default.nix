@@ -34,7 +34,7 @@
     };
     font = {
       name = "Cantarell";
-      package = pkgs.cantarell;
+      package = pkgs.cantarell-fonts;
     };
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = true;
