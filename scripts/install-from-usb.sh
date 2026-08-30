@@ -14,6 +14,37 @@ red() { printf '\033[0;31m%s\033[0m\n' "$*"; }
 green() { printf '\033[0;32m%s\033[0m\n' "$*"; }
 bold() { printf '\033[1m%s\033[0m\n' "$*"; }
 
+export PATH="/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:${PATH:-}"
+
+systemctl_cmd() {
+  if command -v systemctl >/dev/null; then
+    systemctl "$@"
+  elif [[ -x /run/current-system/sw/bin/systemctl ]]; then
+    /run/current-system/sw/bin/systemctl "$@"
+  else
+    return 1
+  fi
+}
+
+stop_nix_daemon() {
+  systemctl_cmd stop nix-daemon nix-daemon.socket 2>/dev/null \
+    || pkill -9 nix-daemon 2>/dev/null \
+    || true
+}
+
+start_nix_daemon() {
+  if systemctl_cmd start nix-daemon.socket nix-daemon 2>/dev/null; then
+    return 0
+  fi
+  if command -v nix-daemon >/dev/null; then
+    pkill -9 nix-daemon 2>/dev/null || true
+    nix-daemon &
+    sleep 2
+    return 0
+  fi
+  return 1
+}
+
 bold "==> NixOS install: ${HOST}"
 echo "    Repository: ${REPO}"
 echo "    Target disk: ${DISK} (ALL DATA WILL BE ERASED)"
@@ -58,7 +89,7 @@ export NIX_STATE_DIR="${WORK}/.nix-install/var"
 export XDG_CACHE_HOME="${WORK}/.nix-install/cache"
 export NIX_BUILD_CORES=2
 
-systemctl stop nix-daemon nix-daemon.socket 2>/dev/null || true
+stop_nix_daemon
 
 # Official minimal ISO: /etc is read-only — bind disk store over /nix/store instead
 if mountpoint -q /nix/store 2>/dev/null; then
@@ -79,7 +110,7 @@ EOF
 export NIX_CONF_DIR=/root/nix-conf
 export NIX_CONFIG=$'max-jobs = 2\ncores = 2'
 
-systemctl start nix-daemon.socket nix-daemon 2>/dev/null || true
+start_nix_daemon || green "    nix-daemon start skipped (nix CLI may still work)"
 sleep 2
 
 AVAIL="$(df --output=avail -B1 "${WORK}" | tail -1)"
@@ -121,8 +152,10 @@ grep -qF "$(cat /root/.ssh/id_ed25519.pub)" /root/.ssh/authorized_keys 2>/dev/nu
 chmod 600 /root/.ssh/authorized_keys
 
 # Official minimal ISO: enable sshd if needed
-if command -v systemctl >/dev/null; then
-  systemctl start sshd 2>/dev/null || true
+if systemctl_cmd start sshd 2>/dev/null; then
+  :
+elif [[ -x /run/current-system/sw/bin/sshd ]]; then
+  /run/current-system/sw/bin/sshd 2>/dev/null || true
 fi
 
 if ! ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=5 \
