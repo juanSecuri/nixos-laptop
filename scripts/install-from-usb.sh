@@ -35,7 +35,12 @@ if [[ ! -d "${REPO}" ]]; then
 fi
 
 cd "${REPO}"
-git fetch origin 2>/dev/null || true
+if ! git fetch origin 2>/dev/null; then
+  bold "==> git fetch failed — recloning repository"
+  rm -rf "${REPO}"
+  git clone https://github.com/juanSecuri/nixos-laptop.git "${REPO}"
+  cd "${REPO}"
+fi
 git reset --hard origin/main 2>/dev/null || true
 rm -f /root/.local/share/nix/trusted-settings.json
 rm -f /root/.config/nix/nix.conf
@@ -54,14 +59,23 @@ export XDG_CACHE_HOME="${WORK}/.nix-install/cache"
 export NIX_BUILD_CORES=2
 
 systemctl stop nix-daemon nix-daemon.socket 2>/dev/null || true
-mkdir -p /root/nix-conf /etc/nix
-cat > /root/nix-conf/nix.conf << EOF
+
+# Official minimal ISO: /etc is read-only — bind disk store over /nix/store instead
+if mountpoint -q /nix/store 2>/dev/null; then
+  umount /nix/store 2>/dev/null || true
+fi
+mkdir -p /nix/store
+if ! mount --bind "${STORE}" /nix/store; then
+  red "ERROR: Could not bind ${STORE} -> /nix/store"
+  exit 1
+fi
+
+mkdir -p /root/nix-conf
+cat > /root/nix-conf/nix.conf << 'EOF'
 experimental-features = nix-command flakes
 max-jobs = 2
 cores = 2
-store = ${STORE}
 EOF
-cp /root/nix-conf/nix.conf /etc/nix/nix.conf
 export NIX_CONF_DIR=/root/nix-conf
 export NIX_CONFIG=$'max-jobs = 2\ncores = 2'
 
@@ -74,9 +88,9 @@ if [[ "${AVAIL}" -lt 50000000000 ]]; then
   df -h "${WORK}"
   exit 1
 fi
-green "    store=${STORE}"
+green "    store=${STORE} (bind-mounted at /nix/store)"
 green "    TMPDIR=${TMPDIR}"
-df -h "${WORK}" "${STORE}"
+df -h /nix/store "${WORK}"
 
 bold "==> Swap"
 swapon "${DISK_SWAP}" 2>/dev/null || true
@@ -90,7 +104,7 @@ if ! swapon --show | grep -q .; then
   swapon "${SWAPFILE}"
 fi
 free -h
-df -h "${STORE}" "${WORK}" 2>/dev/null || df -h
+df -h /nix/store "${WORK}" 2>/dev/null || df -h
 
 if [[ -f scripts/preflight-installer.sh ]]; then
   bash scripts/preflight-installer.sh
