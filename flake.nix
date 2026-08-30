@@ -9,8 +9,8 @@
     ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59t3Wd3kQfqijY6HFvx9lc6Dnnk5eUQNWJNK38="
-      "hyprland.cachix.org-1:DaPQ6wrygxolkJG+3u9JELu3yNhCHzn29RG0LbWVOs="
-      "nix-community.cachix.org-1:mB9FSh9qf2d0iUXvDcskjW+NvHrDQtE5XdqyM5CKybSyTBndM06UoWDEpRnZUvs2xhqUO6kThTHYjtvgkBW8IKw="
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
