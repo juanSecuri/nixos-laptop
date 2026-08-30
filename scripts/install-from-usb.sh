@@ -171,8 +171,8 @@ if ! ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=
 fi
 green "    SSH localhost OK"
 
+NIX_STORE_OPTS=(--store "${STORE}")
 NIX_CACHE_OPTS=(
-  --store "${STORE}"
   --option substituters "https://cache.nixos.org"
   --option trusted-public-keys "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
 )
@@ -180,7 +180,7 @@ NIX_CACHE_OPTS=(
 bold "==> Dry-run"
 nix build ".#nixosConfigurations.${HOST}.config.system.build.toplevel" --dry-run \
   --option max-jobs 2 --option cores 2 \
-  "${NIX_CACHE_OPTS[@]}"
+  "${NIX_STORE_OPTS[@]}" "${NIX_CACHE_OPTS[@]}"
 
 echo
 red "WARNING: This will ERASE ${DISK} and install NixOS."
