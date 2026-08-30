@@ -26,6 +26,21 @@ red "Type YES to partition and install: "
 read -r confirm
 [[ "${confirm}" == "YES" ]] || exit 1
 
+bold "==> Unmounting old partitions (Debian / previous attempts)"
+swapoff -a 2>/dev/null || true
+umount -R /mnt/debian 2>/dev/null || true
+umount -R /mnt 2>/dev/null || true
+for p in "${DISK}"p*; do
+  umount "${p}" 2>/dev/null || true
+done
+sleep 1
+
+if grep -q "${DISK}" /proc/mounts; then
+  red "ERROR: ${DISK} still in use. Run: umount -R /mnt; swapoff -a"
+  grep "${DISK}" /proc/mounts || true
+  exit 1
+fi
+
 bold "==> Partitioning"
 parted -s "${DISK}" mklabel gpt
 parted -s "${DISK}" mkpart ESP fat32 1MiB 512MiB
