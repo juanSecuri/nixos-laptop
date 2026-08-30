@@ -1,27 +1,20 @@
 # Tonight — quick reference (~7 PM)
 
+**Recommended if live USB + GitHub fails:** [INSTALACION-SIMPLE-ES.md](./INSTALACION-SIMPLE-ES.md) (2 phases, no GitHub on USB)
+
 Use the **official ISO** from https://nixos.org/download.html
 
 **Full baby-step guide:** [GUIA-OFICIAL-ES.md](./GUIA-OFICIAL-ES.md)
 
-## On Windows
-
-1. Download **Minimal ISO** from nixos.org → save to **Downloads** (not USB)
-2. **Rufus** → GPT + UEFI → DD mode → START
-3. Backup `/home/jloaiza10`
-
-## On laptop
-
-1. BIOS: **Secure Boot OFF** (F2)
-2. **Ethernet** + USB → **F12**
-3. Login: **root** (official ISO)
+## Simple install (phase 1 — no GitHub)
 
 ```bash
-passwd root
-systemctl start sshd
-git clone https://github.com/juanSecuri/nixos-laptop.git /root/nixos-laptop
-chmod +x /root/nixos-laptop/scripts/*.sh
-bash /root/nixos-laptop/scripts/install-from-usb.sh
+sudo -i
+export PATH=/run/current-system/sw/bin:$PATH
+curl -fsSL https://raw.githubusercontent.com/juanSecuri/nixos-laptop/main/scripts/install-minimal-usb.sh -o /tmp/install-minimal-usb.sh
+chmod +x /tmp/install-minimal-usb.sh
+bash /tmp/install-minimal-usb.sh
 ```
 
-4. Type **YES** → wait 45–90 min → login `jloaiza10`
+→ **YES** → `reboot` → login `jloaiza10` / `nixos123`  
+→ Phase 2: [FASE-2-FLAKE-ES.md](./FASE-2-FLAKE-ES.md)
