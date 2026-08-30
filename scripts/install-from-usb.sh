@@ -56,29 +56,47 @@ fi
 green "    SSH localhost OK"
 
 bold "==> Tuning build for live USB (avoid OOM on 22 GB RAM)"
-mkdir -p /etc/nix
-if ! grep -q '^max-jobs' /etc/nix/nix.conf 2>/dev/null; then
-  cat >> /etc/nix/nix.conf << 'EOF'
+mkdir -p /root/nix-conf
+cat > /root/nix-conf/nix.conf << 'EOF'
+experimental-features = nix-command flakes
 max-jobs = 2
 cores = 2
 EOF
-fi
+export NIX_CONF_DIR=/root/nix-conf
 export NIX_BUILD_CORES=2
+export NIX_CONFIG=$'max-jobs = 2\ncores = 2'
 
 if ! swapon --show | grep -q .; then
-  bold "==> Enabling 16G swap file (build headroom)"
-  SWAPFILE="/swapfile"
-  if [[ ! -f "${SWAPFILE}" ]]; then
-    fallocate -l 16G "${SWAPFILE}" || dd if=/dev/zero of="${SWAPFILE}" bs=1M count=16384 status=progress
-    chmod 600 "${SWAPFILE}"
-    mkswap "${SWAPFILE}"
+  bold "==> Enabling swap on internal disk (live root is too small for /swapfile)"
+  SWAP_MNT="/mnt/install-swap"
+  mkdir -p "${SWAP_MNT}"
+  SWAP_DEV=""
+  for part in /dev/nvme0n1p* /dev/nvme0n1; do
+    [[ -b "${part}" ]] || continue
+    if mount -o rw "${part}" "${SWAP_MNT}" 2>/dev/null; then
+      SWAP_DEV="${part}"
+      break
+    fi
+  done
+  if [[ -n "${SWAP_DEV}" ]]; then
+    SWAPFILE="${SWAP_MNT}/.nix-install-swap"
+    if [[ ! -f "${SWAPFILE}" ]]; then
+      fallocate -l 16G "${SWAPFILE}" \
+        || dd if=/dev/zero of="${SWAPFILE}" bs=1M count=16384 status=progress
+      chmod 600 "${SWAPFILE}"
+      mkswap "${SWAPFILE}"
+    fi
+    swapon "${SWAPFILE}" && green "    Swap enabled on ${SWAPFILE}"
+  else
+    red "WARNING: Could not mount a disk partition for swap — build may OOM"
+    red "         Try: lsblk -f  and mount your Debian root manually"
   fi
-  swapon "${SWAPFILE}" 2>/dev/null || true
 fi
 free -h
 
 bold "==> Evaluating configuration (dry-run)"
-nix build ".#nixosConfigurations.${HOST}.config.system.build.toplevel" --dry-run
+nix build ".#nixosConfigurations.${HOST}.config.system.build.toplevel" --dry-run \
+  --option max-jobs 2 --option cores 2
 
 echo
 red "WARNING: This will ERASE ${DISK} and install NixOS."
@@ -94,7 +112,9 @@ nix run github:nix-community/nixos-anywhere -- \
   --generate-hardware-config nixos-generate-config "./hosts/${HOST}/hardware-configuration.nix" \
   --target-host root@127.0.0.1 \
   --build-on local \
-  --print-build-logs
+  --print-build-logs \
+  --option max-jobs 2 \
+  --option cores 2
 
 green "==> Installation complete. The system will reboot into NixOS."
 green "    Next: docs/install/03-post-install.md"
