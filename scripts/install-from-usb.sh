@@ -46,24 +46,37 @@ mkdir -p "${WORK}"
 mount -o rw "${DISK_ROOT}" "${WORK}"
 rm -rf "${WORK}/.nix-install"
 
-mkdir -p "${WORK}/.nix-install/"{store,tmp,var,cache}
-if ! mountpoint -q /nix/store 2>/dev/null || [[ "$(df /nix/store | tail -1 | awk '{print $1}')" == tmpfs* ]]; then
-  mount --bind "${WORK}/.nix-install/store" /nix/store 2>/dev/null \
-    || green "    Using existing /nix/store mount"
-fi
+STORE="${WORK}/.nix-install/store"
+mkdir -p "${STORE}" "${WORK}/.nix-install/"{tmp,var,cache}
 export TMPDIR="${WORK}/.nix-install/tmp"
 export NIX_STATE_DIR="${WORK}/.nix-install/var"
 export XDG_CACHE_HOME="${WORK}/.nix-install/cache"
 export NIX_BUILD_CORES=2
-mkdir -p /root/nix-conf
-cat > /root/nix-conf/nix.conf << 'EOF'
+
+systemctl stop nix-daemon nix-daemon.socket 2>/dev/null || true
+mkdir -p /root/nix-conf /etc/nix
+cat > /root/nix-conf/nix.conf << EOF
 experimental-features = nix-command flakes
 max-jobs = 2
 cores = 2
+store = ${STORE}
 EOF
+cp /root/nix-conf/nix.conf /etc/nix/nix.conf
 export NIX_CONF_DIR=/root/nix-conf
 export NIX_CONFIG=$'max-jobs = 2\ncores = 2'
+
+systemctl start nix-daemon.socket nix-daemon 2>/dev/null || true
+sleep 2
+
+AVAIL="$(df --output=avail -B1 "${WORK}" | tail -1)"
+if [[ "${AVAIL}" -lt 50000000000 ]]; then
+  red "ERROR: Need at least 50 GiB free on ${DISK_ROOT}"
+  df -h "${WORK}"
+  exit 1
+fi
+green "    store=${STORE}"
 green "    TMPDIR=${TMPDIR}"
+df -h "${WORK}" "${STORE}"
 
 bold "==> Swap"
 swapon "${DISK_SWAP}" 2>/dev/null || true
@@ -77,7 +90,7 @@ if ! swapon --show | grep -q .; then
   swapon "${SWAPFILE}"
 fi
 free -h
-df -h /nix/store "${WORK}" 2>/dev/null || df -h
+df -h "${STORE}" "${WORK}" 2>/dev/null || df -h
 
 if [[ -f scripts/preflight-installer.sh ]]; then
   bash scripts/preflight-installer.sh

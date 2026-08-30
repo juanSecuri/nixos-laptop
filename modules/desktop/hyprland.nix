@@ -1,18 +1,13 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
   ...
 }:
 {
-  imports = [
-    inputs.hyprland.nixosModules.default
-  ];
-
+  # nixpkgs Hyprland only — avoids compiling flake/musl builds on live USB
   programs.hyprland = {
     enable = true;
-    # Use nixpkgs/cachix binaries — do not compile Hyprland on live USB
     xwayland.enable = true;
   };
 
