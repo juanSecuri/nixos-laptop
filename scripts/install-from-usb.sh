@@ -33,11 +33,16 @@ stop_nix_daemon() {
 }
 
 start_nix_daemon() {
+  pkill -9 nix-daemon 2>/dev/null || true
+  if [[ -n "${NIX_CONF_DIR:-}" ]] && command -v nix-daemon >/dev/null; then
+    NIX_CONF_DIR="${NIX_CONF_DIR}" nix-daemon &
+    sleep 2
+    return 0
+  fi
   if systemctl_cmd start nix-daemon.socket nix-daemon 2>/dev/null; then
     return 0
   fi
   if command -v nix-daemon >/dev/null; then
-    pkill -9 nix-daemon 2>/dev/null || true
     nix-daemon &
     sleep 2
     return 0
@@ -91,26 +96,27 @@ export NIX_BUILD_CORES=2
 
 stop_nix_daemon
 
-# Official minimal ISO: /etc is read-only — bind disk store over /nix/store instead
-if mountpoint -q /nix/store 2>/dev/null; then
-  umount /nix/store 2>/dev/null || true
-fi
-mkdir -p /nix/store
-if ! mount --bind "${STORE}" /nix/store; then
-  red "ERROR: Could not bind ${STORE} -> /nix/store"
-  exit 1
-fi
-
+# NEVER bind-mount over /nix/store on live ISO — it hides the running system's binaries.
 mkdir -p /root/nix-conf
-cat > /root/nix-conf/nix.conf << 'EOF'
+cat > /root/nix-conf/nix.conf << EOF
 experimental-features = nix-command flakes
 max-jobs = 2
 cores = 2
+store = ${STORE}
 EOF
 export NIX_CONF_DIR=/root/nix-conf
 export NIX_CONFIG=$'max-jobs = 2\ncores = 2'
 
-start_nix_daemon || green "    nix-daemon start skipped (nix CLI may still work)"
+cat > /root/.profile << EOF
+export PATH="/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:\$PATH"
+export NIX_CONF_DIR=/root/nix-conf
+export TMPDIR=${TMPDIR}
+export NIX_STATE_DIR=${NIX_STATE_DIR}
+export XDG_CACHE_HOME=${XDG_CACHE_HOME}
+EOF
+cp /root/.profile /root/.bashrc
+
+start_nix_daemon || red "ERROR: could not start nix-daemon"
 sleep 2
 
 AVAIL="$(df --output=avail -B1 "${WORK}" | tail -1)"
@@ -119,9 +125,9 @@ if [[ "${AVAIL}" -lt 50000000000 ]]; then
   df -h "${WORK}"
   exit 1
 fi
-green "    store=${STORE} (bind-mounted at /nix/store)"
+green "    store=${STORE} (via nix.conf, /nix/store untouched)"
 green "    TMPDIR=${TMPDIR}"
-df -h /nix/store "${WORK}"
+df -h "${STORE}" "${WORK}"
 
 bold "==> Swap"
 swapon "${DISK_SWAP}" 2>/dev/null || true
@@ -135,7 +141,7 @@ if ! swapon --show | grep -q .; then
   swapon "${SWAPFILE}"
 fi
 free -h
-df -h /nix/store "${WORK}" 2>/dev/null || df -h
+df -h "${STORE}" "${WORK}" 2>/dev/null || df -h
 
 if [[ -f scripts/preflight-installer.sh ]]; then
   bash scripts/preflight-installer.sh
@@ -166,6 +172,7 @@ fi
 green "    SSH localhost OK"
 
 NIX_CACHE_OPTS=(
+  --store "${STORE}"
   --option substituters "https://cache.nixos.org"
   --option trusted-public-keys "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
 )
