@@ -6,13 +6,15 @@ Declarative NixOS configuration for **jloaiza10** — Lenovo V14 G4 ABP (AMD Ryz
 |---|---|
 | **Desktop** | Hyprland · Waybar · Rofi · Catppuccin Mocha |
 | **Dev stack** | Python 3.11 · Node 22 · Java 21 · Docker · Supabase · Azure · gh |
-| **Install method** | **USB + Rufus** → live installer → `nixos-anywhere` |
+| **Install method** | **USB + Rufus** (official or minimal ISO) → live installer → `install-from-usb.sh` |
 | **Flake host** | `#lenovo-v14` |
 
 ## Install tonight (~7 PM)
 
+**Full guide (Spanish):** [docs/install/GUIA-OFICIAL-ES.md](docs/install/GUIA-OFICIAL-ES.md)
+
 1. **[Checklist](docs/install/00-checklist.md)** — backup, BIOS, Ethernet  
-2. **[Windows + Rufus](docs/install/01-windows-rufus.md)** — create bootable USB  
+2. **[Windows + Rufus](docs/install/01-windows-rufus.md)** — official ISO from nixos.org  
 3. **[Live installer](docs/install/02-live-installer.md)** — boot USB and run install  
 4. **[Post-install](docs/install/03-post-install.md)** — Docker, Cursor, TPC repos  
 

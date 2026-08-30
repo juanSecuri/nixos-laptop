@@ -12,8 +12,7 @@
 
   programs.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    # Use nixpkgs/cachix binaries — do not compile Hyprland on live USB
     xwayland.enable = true;
   };
 

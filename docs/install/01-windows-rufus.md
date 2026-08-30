@@ -4,13 +4,22 @@ Do this on your **Windows** machine before the 7 PM install.
 
 ## 1. Download the NixOS installer ISO
 
-Use the **nix-community** installer (SSH enabled, works with nixos-anywhere):
+### Option A — Official (recommended)
 
-**Direct link:**
+Download from **[nixos.org/download](https://nixos.org/download.html)**:
+
+- **Minimal ISO** (lighter):  
+  https://channels.nixos.org/nixos-unstable/latest-nixos-minimal-x86_64-linux.iso
+- **Graphical ISO** (desktop in installer):  
+  https://channels.nixos.org/nixos-unstable/latest-nixos-graphical-x86_64-linux.iso
+
+Full Spanish walkthrough: [GUIA-OFICIAL-ES.md](./GUIA-OFICIAL-ES.md)
+
+### Option B — nix-community (SSH + QR on screen)
 
 https://github.com/nix-community/nixos-images/releases/download/nixos-unstable/nixos-installer-x86_64-linux.iso
 
-Save to e.g. `Downloads\nixos-installer-x86_64-linux.iso` (~800 MB).
+Save to e.g. `C:\Users\juane\Downloads\` — **not on the USB stick**.
 
 ## 2. Insert USB
 
