@@ -70,26 +70,30 @@ if ! swapon --show | grep -q .; then
   bold "==> Enabling swap on internal disk (live root is too small for /swapfile)"
   SWAP_MNT="/mnt/install-swap"
   mkdir -p "${SWAP_MNT}"
-  SWAP_DEV=""
-  for part in /dev/nvme0n1p* /dev/nvme0n1; do
-    [[ -b "${part}" ]] || continue
-    if mount -o rw "${part}" "${SWAP_MNT}" 2>/dev/null; then
-      SWAP_DEV="${part}"
-      break
-    fi
-  done
-  if [[ -n "${SWAP_DEV}" ]]; then
+  umount "${SWAP_MNT}" 2>/dev/null || true
+  SWAP_DEV="$(
+    lsblk -pnro NAME,SIZE,FSTYPE \
+      | awk '$3=="ext4" || $3=="btrfs" || $3=="xfs" { print $2, $1 }' \
+      | sort -h \
+      | tail -1 \
+      | awk '{ print $2 }'
+  )"
+  if [[ -z "${SWAP_DEV}" ]]; then
+    red "WARNING: No ext4/btrfs/xfs partition found for swap"
+    red "         Run: lsblk -f  and mount your Debian root to ${SWAP_MNT}"
+  elif mount -o rw "${SWAP_DEV}" "${SWAP_MNT}"; then
     SWAPFILE="${SWAP_MNT}/.nix-install-swap"
-    if [[ ! -f "${SWAPFILE}" ]]; then
-      fallocate -l 16G "${SWAPFILE}" \
-        || dd if=/dev/zero of="${SWAPFILE}" bs=1M count=16384 status=progress
+    rm -f "${SWAPFILE}"
+    if fallocate -l 16G "${SWAPFILE}" \
+      || dd if=/dev/zero of="${SWAPFILE}" bs=1M count=16384 status=progress; then
       chmod 600 "${SWAPFILE}"
       mkswap "${SWAPFILE}"
+      swapon "${SWAPFILE}" && green "    Swap enabled on ${SWAPFILE} (${SWAP_DEV})"
+    else
+      red "WARNING: Could not create 16G swap on ${SWAP_DEV}"
     fi
-    swapon "${SWAPFILE}" && green "    Swap enabled on ${SWAPFILE}"
   else
-    red "WARNING: Could not mount a disk partition for swap — build may OOM"
-    red "         Try: lsblk -f  and mount your Debian root manually"
+    red "WARNING: Could not mount ${SWAP_DEV} at ${SWAP_MNT}"
   fi
 fi
 free -h
