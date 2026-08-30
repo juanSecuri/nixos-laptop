@@ -55,6 +55,28 @@ if ! ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=
 fi
 green "    SSH localhost OK"
 
+bold "==> Tuning build for live USB (avoid OOM on 22 GB RAM)"
+mkdir -p /etc/nix
+if ! grep -q '^max-jobs' /etc/nix/nix.conf 2>/dev/null; then
+  cat >> /etc/nix/nix.conf << 'EOF'
+max-jobs = 2
+cores = 2
+EOF
+fi
+export NIX_BUILD_CORES=2
+
+if ! swapon --show | grep -q .; then
+  bold "==> Enabling 16G swap file (build headroom)"
+  SWAPFILE="/swapfile"
+  if [[ ! -f "${SWAPFILE}" ]]; then
+    fallocate -l 16G "${SWAPFILE}" || dd if=/dev/zero of="${SWAPFILE}" bs=1M count=16384 status=progress
+    chmod 600 "${SWAPFILE}"
+    mkswap "${SWAPFILE}"
+  fi
+  swapon "${SWAPFILE}" 2>/dev/null || true
+fi
+free -h
+
 bold "==> Evaluating configuration (dry-run)"
 nix build ".#nixosConfigurations.${HOST}.config.system.build.toplevel" --dry-run
 
