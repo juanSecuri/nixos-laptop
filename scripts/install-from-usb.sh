@@ -35,6 +35,9 @@ if [[ ! -d "${REPO}" ]]; then
 fi
 
 cd "${REPO}"
+git pull --ff-only 2>/dev/null || true
+git reset --hard origin/main 2>/dev/null || true
+rm -f /root/.local/share/nix/trusted-settings.json
 
 bold "==> Disk workspace (store + temp on ${DISK_ROOT}, not RAM)"
 umount "${WORK}" 2>/dev/null || true
