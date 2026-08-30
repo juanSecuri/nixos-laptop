@@ -35,14 +35,16 @@ if [[ ! -d "${REPO}" ]]; then
 fi
 
 cd "${REPO}"
-git pull --ff-only 2>/dev/null || true
+git fetch origin 2>/dev/null || true
 git reset --hard origin/main 2>/dev/null || true
 rm -f /root/.local/share/nix/trusted-settings.json
+rm -f /root/.config/nix/nix.conf
 
 bold "==> Disk workspace (store + temp on ${DISK_ROOT}, not RAM)"
 umount "${WORK}" 2>/dev/null || true
 mkdir -p "${WORK}"
 mount -o rw "${DISK_ROOT}" "${WORK}"
+rm -rf "${WORK}/.nix-install"
 
 mkdir -p "${WORK}/.nix-install/"{store,tmp,var,cache}
 if ! mountpoint -q /nix/store 2>/dev/null || [[ "$(df /nix/store | tail -1 | awk '{print $1}')" == tmpfs* ]]; then
@@ -103,9 +105,15 @@ if ! ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=
 fi
 green "    SSH localhost OK"
 
+NIX_CACHE_OPTS=(
+  --option substituters "https://cache.nixos.org"
+  --option trusted-public-keys "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+)
+
 bold "==> Dry-run"
 nix build ".#nixosConfigurations.${HOST}.config.system.build.toplevel" --dry-run \
-  --option max-jobs 2 --option cores 2
+  --option max-jobs 2 --option cores 2 \
+  "${NIX_CACHE_OPTS[@]}"
 
 echo
 red "WARNING: This will ERASE ${DISK} and install NixOS."
@@ -123,7 +131,8 @@ nix run github:nix-community/nixos-anywhere -- \
   --build-on local \
   --print-build-logs \
   --option max-jobs 2 \
-  --option cores 2
+  --option cores 2 \
+  "${NIX_CACHE_OPTS[@]}"
 
 green "==> Done. Reboot into NixOS (remove USB)."
 green "    Post-install: docs/install/03-post-install.md"

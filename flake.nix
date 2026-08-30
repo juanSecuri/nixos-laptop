@@ -1,15 +1,6 @@
 {
   description = "NixOS dev laptop — Lenovo V14 G4 ABP (jloaiza10)";
 
-  nixConfig = {
-    extra-substituters = [
-      "https://cache.nixos.org"
-    ];
-    extra-trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59t3Wd3kQfqijY6HFvx9lc6Dnnk5eUQNWJNK38="
-    ];
-  };
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
