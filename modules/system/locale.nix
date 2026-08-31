@@ -3,24 +3,8 @@
   ...
 }:
 {
-  networking = {
-    networkmanager = {
-      enable = true;
-      wifi.powersave = true;
-    };
-    firewall = {
-      enable = lib.mkDefault true;
-      allowedTCPPorts = [
-        3000 # Next.js dev
-        5173 # Vite dev
-        8000 # FastAPI dev
-        5678 # n8n
-      ];
-    };
-  };
-
-  networking.hostName = lib.mkDefault "lenovo-v14";
   time.timeZone = lib.mkDefault "America/Bogota";
+
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "es_CO.UTF-8";

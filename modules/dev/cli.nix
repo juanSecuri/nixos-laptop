@@ -5,17 +5,12 @@
 }:
 {
   environment.systemPackages = with pkgs; [
-    git
+    azure-cli
     gh
     git-lfs
     delta
     lazygit
-    # Cloud CLIs
-    azure-cli
     gnumake
-    # General utilities
-    curl
-    wget
     jq
     yq-go
     httpie
@@ -27,10 +22,6 @@
     tmux
     htop
     btop
-    unzip
-    zip
-    gnupg
-    openssh
     age
     sops
     nixfmt

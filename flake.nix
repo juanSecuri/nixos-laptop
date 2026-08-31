@@ -1,5 +1,5 @@
 {
-  description = "NixOS dev laptop — Lenovo V14 G4 ABP (jloaiza10)";
+  description = "NixOS laptop — Lenovo V14 G4 ABP (jloaiza10)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -29,6 +29,7 @@
     let
       system = "x86_64-linux";
       username = "jloaiza10";
+      pkgs = nixpkgs.legacyPackages.${system};
     in
     {
       nixosConfigurations.lenovo-v14 = nixpkgs.lib.nixosSystem {
@@ -44,38 +45,31 @@
       };
 
       devShells.${system} = {
-        default = nixpkgs.legacyPackages.${system}.mkShell {
-          packages = with nixpkgs.legacyPackages.${system}; [
-            nixfmt
-          ];
+        default = pkgs.mkShell {
+          packages = [ pkgs.nixfmt ];
         };
 
-        python = nixpkgs.legacyPackages.${system}.mkShell {
-          packages = with nixpkgs.legacyPackages.${system}; [
+        python = pkgs.mkShell {
+          packages = with pkgs; [
             python311
             uv
             ruff
             tesseract
             poppler-utils
           ];
-          shellHook = ''
-            echo "Python dev shell — FastAPI / OCR projects"
-          '';
+          shellHook = "echo 'Python shell — FastAPI / OCR / Supabase'";
         };
 
-        node = nixpkgs.legacyPackages.${system}.mkShell {
-          packages = with nixpkgs.legacyPackages.${system}; [
+        node = pkgs.mkShell {
+          packages = with pkgs; [
             nodejs_22
             pnpm
           ];
-          shellHook = ''
-            echo "Node dev shell — pnpm monorepos"
-          '';
+          shellHook = "echo 'Node shell — pnpm / Vite / Next.js'";
         };
 
-        # The Profit Catalyst — FastAPI + Postgres + QBO + Supabase + Docker
-        profit-catalyst = nixpkgs.legacyPackages.${system}.mkShell {
-          packages = with nixpkgs.legacyPackages.${system}; [
+        profit-catalyst = pkgs.mkShell {
+          packages = with pkgs; [
             python311
             uv
             ruff
@@ -90,12 +84,10 @@
             nodejs_22
             pnpm
           ];
-          shellHook = ''
-            echo "TPC dev shell — agente-ia-angela, bookkeeping, contable DIAN, cash-flow, allapattah, iot"
-          '';
+          shellHook = "echo 'TPC shell — agente-ia-angela, bookkeeping, DIAN, cash-flow'";
         };
       };
 
-      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt;
+      formatter.${system} = pkgs.nixfmt;
     };
 }

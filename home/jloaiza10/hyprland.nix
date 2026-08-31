@@ -1,6 +1,5 @@
 { config, lib, pkgs, ... }:
 let
-  accent = "#cba6f7";
   mocha = {
     base = "#1e1e2e";
     mantle = "#181825";
@@ -27,7 +26,7 @@ in
       monitor = ",preferred,auto,1";
 
       exec-once = [
-        "waybar"
+        "hyprpaper"
         "mako"
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
@@ -102,21 +101,14 @@ in
         preserve_split = true;
       };
 
-      master = {
-        new_status = "master";
-      };
+      master.new_status = "master";
 
-      gestures = {
-        workspace_swipe = true;
-      };
+      gestures.workspace_swipe = true;
 
       misc = {
         force_default_wallpaper = 0;
         disable_hyprland_logo = true;
       };
-
-      # Catppuccin Mocha base until you set a wallpaper in ~/Pictures/wallpaper.jpg
-      # exec-once = hyprpaper can be added after placing a wallpaper
 
       "$mod" = "SUPER";
 
@@ -155,6 +147,7 @@ in
         "$mod, F, fullscreen, 0"
         "$mod SHIFT, F, fullscreen, 1"
         "$mod, SPACE, exec, rofi -show drun -show-icons"
+        "$mod SHIFT, B, exec, la-palabra-del-senor"
         ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"
         "$mod, Print, exec, grim -g \"$(slurp)\" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"
         ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
@@ -178,12 +171,16 @@ in
     };
 
     extraConfig = ''
-      # Cursor IDE — tile by default
       windowrulev2 = float, class:^(cursor)$
       windowrulev2 = size 85% 85%, class:^(cursor)$
       windowrulev2 = center, class:^(cursor)$
     '';
   };
+
+  home.file.".config/hypr/hyprpaper.conf".text = ''
+    preload = ${config.home.homeDirectory}/Pictures/wallpaper.jpg
+    wallpaper = ,${config.home.homeDirectory}/Pictures/wallpaper.jpg
+  '';
 
   home.file.".config/rofi/config.rasi".text = ''
     configuration {
@@ -252,9 +249,4 @@ in
       size: 24px;
     }
   '';
-
-  home.packages = with pkgs; [
-    hyprlock
-    hypridle
-  ];
 }

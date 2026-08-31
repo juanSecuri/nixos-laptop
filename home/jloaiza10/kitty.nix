@@ -16,7 +16,5 @@
     };
   };
 
-  home.packages = with pkgs; [
-    kitty-themes
-  ];
+  home.packages = with pkgs; [ kitty-themes ];
 }

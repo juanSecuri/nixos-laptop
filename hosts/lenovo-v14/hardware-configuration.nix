@@ -1,20 +1,11 @@
-# PLACEHOLDER — nixos-anywhere regenerates this during install.
-# Do NOT add fileSystems or swapDevices here: disko.nix owns the disk layout.
+# Regenerado automáticamente por nixos-anywhere durante la instalación.
+# No editar a mano en un sistema ya instalado.
 {
-  imports = [ ];
-
-  boot.initrd.availableKernelModules = [
-    "nvme"
-    "xhci_pci"
-    "ahci"
-    "usb_storage"
-    "sd_mod"
-  ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [
-    "kvm-amd"
-  ];
-  boot.extraModulePackages = [ ];
-
-  nixpkgs.hostPlatform = "x86_64-linux";
+  config,
+  lib,
+  modulesPath,
+  ...
+}:
+{
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 }

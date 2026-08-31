@@ -17,16 +17,14 @@
       "amdgpu.backlight=0"
       "acpi_osi=Linux"
     ];
-    loader.systemd-boot.configurationLimit = 10;
+    kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
+    kernelModules = lib.mkAfter [ "snd_hda_intel" ];
   };
 
   hardware = {
     cpu.amd.updateMicrocode = lib.mkDefault true;
     enableRedistributableFirmware = true;
-    firmware = with pkgs; [
-      linux-firmware
-      # RTL8852BE (Wi-Fi 6) — firmware included in linux-firmware since nixpkgs 25.11+
-    ];
+    firmware = with pkgs; [ linux-firmware ];
     bluetooth.enable = true;
     graphics = {
       enable = true;
@@ -41,16 +39,11 @@
     upower.enable = true;
   };
 
-  # Laptop power / suspend
   services.logind.settings.Login = {
     HandleLidSwitch = "suspend";
     HandleLidSwitchExternalPower = "ignore";
     HandlePowerKey = "suspend";
   };
-
-  boot.kernelModules = lib.mkAfter [
-    "snd_hda_intel"
-  ];
 
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -61,7 +54,4 @@
     pulse.enable = true;
     jack.enable = true;
   };
-
-  # Prefer recent kernel for rtw89 / amdgpu on Ryzen 7730U
-  boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
 }

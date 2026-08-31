@@ -1,12 +1,31 @@
 { config, lib, pkgs, ... }:
+let
+  mocha = {
+    base = "#1e1e2e";
+    mantle = "#181825";
+    surface0 = "#313244";
+    surface1 = "#45475a";
+    text = "#cdd6f4";
+    subtext = "#a6adc8";
+    lavender = "#b4befe";
+    mauve = "#cba6f7";
+    blue = "#89b4fa";
+    green = "#a6e3a1";
+    red = "#f38ba8";
+    yellow = "#f9e2af";
+  };
+in
 {
   imports = [
     ./hyprland.nix
     ./waybar.nix
-    ./terminal.nix
+    ./kitty.nix
     ./shell.nix
     ./git.nix
     ./cursor.nix
+    ./faith.nix
+    ./hyprlock.nix
+    ./hypridle.nix
   ];
 
   home = {
@@ -36,14 +55,10 @@
       name = "Cantarell";
       package = pkgs.cantarell-fonts;
     };
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
-    };
+    gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
     gtk4 = {
       theme = config.gtk.theme;
-      extraConfig = {
-        gtk-application-prefer-dark-theme = true;
-      };
+      extraConfig.gtk-application-prefer-dark-theme = true;
     };
   };
 
@@ -65,9 +80,9 @@
     enable = true;
     settings = {
       font = "JetBrainsMono Nerd Font 10";
-      background-color = "#181825";
-      text-color = "#cdd6f4";
-      border-color = "#cba6f7";
+      background-color = mocha.mantle;
+      text-color = mocha.text;
+      border-color = mocha.mauve;
       border-size = 2;
       border-radius = 10;
       default-timeout = 5000;
@@ -78,11 +93,14 @@
   };
 
   home.packages = with pkgs; [
-    firefox
+    catppuccin-gtk
+    papirus-icon-theme
+    rofi
+    wofi
+    mako
     thunar
     file-roller
     xdg-utils
-    xdg-desktop-portal-hyprland
     wl-clipboard
     cliphist
     grim
@@ -91,5 +109,8 @@
     brightnessctl
     pavucontrol
     blueman
+    hyprpaper
+    hyprlock
+    hypridle
   ];
 }

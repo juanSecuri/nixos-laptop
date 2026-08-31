@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   ...
 }:
@@ -13,6 +12,7 @@
       noto-fonts
       noto-fonts-color-emoji
       cantarell-fonts
+      font-awesome
     ];
   };
 }

@@ -1,22 +1,20 @@
 # Troubleshooting
 
-## kexec / Debian install (deprecated)
+## Menú de arranque con GNOME y Plasma (ISO Graphical)
 
-**Symptom:** Black screen immediately after `nixos-anywhere` or `/root/kexec/run` on Debian.
+**Síntoma:** Al arrancar el USB ves 4 entradas (GNOME/Plasma × LTS/7.2).
 
-**Cause:** kexec fails on Lenovo V14 G4 ABP with Debian 6.12 + this firmware.
+**Causa:** Es la ISO gráfica de NixOS — solo elige el entorno del instalador en vivo.
 
-**Fix:** Use the **USB installer** path ([README](./README.md)). Do not use `scripts/install-from-debian.sh`.
+**Fix:** Elige cualquiera (ej. GNOME LTS) o usa la **Minimal ISO** para una sola opción.
 
 ---
 
 ## Secure Boot
 
-**Symptom:** USB boots to error, or installer/kernel panic.
+**Síntoma:** USB no arranca o kernel panic.
 
-**Fix:** BIOS → **Secure Boot → Disabled** → save → retry.
-
-Check from Linux:
+**Fix:** BIOS → Secure Boot → Disabled → F10 guardar.
 
 ```bash
 mokutil --sb-state
@@ -24,9 +22,9 @@ mokutil --sb-state
 
 ---
 
-## Wi-Fi not working after install
+## Wi-Fi no funciona en live USB
 
-**Fix:** Use Ethernet for first boot and rebuild. Config already sets `linuxPackages_latest` and `linux-firmware` for RTL8852BE.
+**Fix:** Usa Ethernet. El sistema instalado trae `linuxPackages_latest` + `linux-firmware` para RTL8852BE.
 
 ```bash
 sudo dmesg | grep -i rtw89
@@ -35,20 +33,36 @@ nmcli device wifi list
 
 ---
 
-## SDDM / Hyprland not showing
+## SDDM / Hyprland no aparece
 
 ```bash
 sudo systemctl status display-manager
 journalctl -u display-manager -b --no-pager | tail -50
 ```
 
-Try tty: `Ctrl + Alt + F3`, login, then `sudo nixos-rebuild switch --flake ~/nixos-laptop#lenovo-v14`.
+TTY: `Ctrl + Alt + F3`, login, luego:
+
+```bash
+sudo nixos-rebuild switch --flake ~/nixos-laptop#lenovo-v14
+```
 
 ---
 
-## nixos-anywhere SSH errors (live USB)
+## Waybar duplicado
 
 ```bash
+pgrep -a waybar   # debe haber UN solo proceso
+```
+
+Si hay dos: `killall waybar && systemctl --user restart waybar`.
+
+---
+
+## SSH localhost (nixos-anywhere)
+
+```bash
+passwd root
+systemctl start sshd
 mkdir -p /root/.ssh && chmod 700 /root/.ssh
 ssh-keygen -t ed25519 -N "" -f /root/.ssh/id_ed25519
 cat /root/.ssh/id_ed25519.pub >> /root/.ssh/authorized_keys
@@ -58,17 +72,9 @@ ssh root@127.0.0.1 echo OK
 
 ---
 
-## Build errors (deprecated package names)
+## Error de compilación (nombres de paquetes)
 
-Ensure you have the latest `main` from GitHub. Common fixes already in this repo:
-
-- `poppler-utils` (not `poppler_utils`)
-- `qt6Packages.qt6ct` (not `qt6ct`)
-- `rofi` (not `rofi-wayland`)
-- `nerd-fonts.jetbrains-mono` (not `nerdfonts.override`)
-- No separate `rtw89-firmware` package
-
-Dry-run on live installer:
+Dry-run en live USB:
 
 ```bash
 cd /root/nixos-laptop
@@ -81,14 +87,13 @@ nix build .#nixosConfigurations.lenovo-v14.config.system.build.toplevel --dry-ru
 
 ```bash
 sudo nixos-rebuild switch --rollback
-# or from boot menu: select previous generation in systemd-boot
 ```
+
+O en el menú de arranque: generación anterior en systemd-boot.
 
 ---
 
-## Cursor AppImage
-
-If Cursor fails to start:
+## Cursor no inicia
 
 ```bash
 ~/.local/share/cursor/cursor.AppImage --no-sandbox

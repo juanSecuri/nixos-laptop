@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }:
 let
@@ -48,9 +47,9 @@ in
           all-outputs = true;
           format = "{icon}";
           format-icons = {
-            active = "";
-            default = "";
-            urgent = "";
+            active = " ";
+            default = " ";
+            urgent = " ";
           };
         };
 
@@ -60,7 +59,7 @@ in
         };
 
         clock = {
-          format = "{:%a %d %b  %H:%M}";
+          format = " {:%a %d %b  %H:%M}";
           tooltip-format = "<big>{:%Y %B %d}</big>\n<tt><small>{calendar}</small></tt>";
         };
 
@@ -70,7 +69,7 @@ in
         };
 
         memory = {
-          format = " {}%";
+          format = " {percentage}%";
           tooltip = false;
         };
 
@@ -109,9 +108,7 @@ in
           on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
         };
 
-        tray = {
-          spacing = 10;
-        };
+        tray.spacing = 10;
       }
     ];
 
