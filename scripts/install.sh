@@ -11,6 +11,9 @@ red() { printf '\033[0;31m%s\033[0m\n' "$*"; }
 green() { printf '\033[0;32m%s\033[0m\n' "$*"; }
 bold() { printf '\033[1m%s\033[0m\n' "$*"; }
 
+# Live ISO may not enable flakes/nix-command by default
+export NIX_CONFIG="experimental-features = nix-command flakes"
+
 bold "==> Instalación NixOS: ${HOST}"
 echo "    Repo: ${REPO}"
 echo "    Disco: ${DISK} (SE BORRA TODO)"
@@ -50,8 +53,8 @@ if ! swapon --show | grep -q .; then
   fallocate -l "${SWAP_GB}G" "${SWAPFILE}" 2>/dev/null \
     || dd if=/dev/zero of="${SWAPFILE}" bs=1M count=$((SWAP_GB * 1024)) status=progress
   chmod 600 "${SWAPFILE}"
-  mkswap "${SWAPFILE}"
-  swapon "${SWAPFILE}" || bold "    AVISO: sin swap extra — continuando con RAM del live USB"
+  mkswap -f "${SWAPFILE}" 2>/dev/null || mkswap "${SWAPFILE}"
+  swapon "${SWAPFILE}" 2>/dev/null || bold "    AVISO: sin swap extra — continuando con RAM del live USB"
 fi
 free -h
 

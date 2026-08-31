@@ -9,6 +9,8 @@ red() { printf '\033[0;31m%s\033[0m\n' "$*"; }
 green() { printf '\033[0;32m%s\033[0m\n' "$*"; }
 bold() { printf '\033[1m%s\033[0m\n' "$*"; }
 
+export NIX_CONFIG="experimental-features = nix-command flakes"
+
 bold "==> Preflight"
 
 if [[ ! -b "${DISK}" ]]; then
