@@ -37,13 +37,21 @@ git fetch origin 2>/dev/null && git reset --hard origin/main 2>/dev/null || true
 bold "==> Swap temporal (evita quedarse sin RAM durante la compilación)"
 if ! swapon --show | grep -q .; then
   SWAPFILE="/swapfile"
-  if [[ ! -f "${SWAPFILE}" ]]; then
-    fallocate -l 16G "${SWAPFILE}" 2>/dev/null \
-      || dd if=/dev/zero of="${SWAPFILE}" bs=1M count=16384 status=progress
-    chmod 600 "${SWAPFILE}"
-    mkswap "${SWAPFILE}"
+  rm -f "${SWAPFILE}" 2>/dev/null || true
+
+  # Live ISO root is small — use 4G max (22GB RAM laptop needs little extra swap)
+  SWAP_GB=4
+  AVAIL_KB="$(df --output=avail / | tail -1 | tr -d ' ')"
+  if [[ -n "${AVAIL_KB}" && "${AVAIL_KB}" -lt 5000000 ]]; then
+    SWAP_GB=2
   fi
-  swapon "${SWAPFILE}"
+
+  bold "    Creando swap de ${SWAP_GB}G en ${SWAPFILE}"
+  fallocate -l "${SWAP_GB}G" "${SWAPFILE}" 2>/dev/null \
+    || dd if=/dev/zero of="${SWAPFILE}" bs=1M count=$((SWAP_GB * 1024)) status=progress
+  chmod 600 "${SWAPFILE}"
+  mkswap "${SWAPFILE}"
+  swapon "${SWAPFILE}" || bold "    AVISO: sin swap extra — continuando con RAM del live USB"
 fi
 free -h
 
