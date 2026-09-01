@@ -37,25 +37,11 @@ fi
 cd "${REPO}"
 git fetch origin 2>/dev/null && git reset --hard origin/main 2>/dev/null || true
 
-bold "==> Swap temporal (evita quedarse sin RAM durante la compilación)"
-if ! swapon --show | grep -q .; then
-  SWAPFILE="/swapfile"
-  rm -f "${SWAPFILE}" 2>/dev/null || true
-
-  # Live ISO root is small — use 4G max (22GB RAM laptop needs little extra swap)
-  SWAP_GB=4
-  AVAIL_KB="$(df --output=avail / | tail -1 | tr -d ' ')"
-  if [[ -n "${AVAIL_KB}" && "${AVAIL_KB}" -lt 5000000 ]]; then
-    SWAP_GB=2
-  fi
-
-  bold "    Creando swap de ${SWAP_GB}G en ${SWAPFILE}"
-  fallocate -l "${SWAP_GB}G" "${SWAPFILE}" 2>/dev/null \
-    || dd if=/dev/zero of="${SWAPFILE}" bs=1M count=$((SWAP_GB * 1024)) status=progress
-  chmod 600 "${SWAPFILE}"
-  mkswap -f "${SWAPFILE}" 2>/dev/null || mkswap "${SWAPFILE}"
-  swapon "${SWAPFILE}" 2>/dev/null || bold "    AVISO: sin swap extra — continuando con RAM del live USB"
-fi
+bold "==> Liberar espacio en live USB (root pequeño, no compilar aquí)"
+swapoff /swapfile 2>/dev/null || true
+rm -f /swapfile 2>/dev/null || true
+nix-collect-garbage -d 2>/dev/null || true
+df -h / /nix
 free -h
 
 if [[ -f scripts/preflight.sh ]]; then
@@ -97,11 +83,12 @@ if [[ "${confirm}" != "YES" ]]; then
 fi
 
 bold "==> Instalando (45–90 min, Ethernet conectado)"
+bold "    Compilación en disco NVMe (--build-on remote), no en USB live"
 nix run github:nix-community/nixos-anywhere -- \
   --flake ".#${HOST}" \
   --generate-hardware-config nixos-generate-config "./hosts/${HOST}/hardware-configuration.nix" \
   --target-host root@127.0.0.1 \
-  --build-on local \
+  --build-on remote \
   --print-build-logs \
   --option max-jobs 2 \
   --option cores 2
