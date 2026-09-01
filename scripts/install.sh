@@ -12,10 +12,12 @@ green() { printf '\033[0;32m%s\033[0m\n' "$*"; }
 bold() { printf '\033[1m%s\033[0m\n' "$*"; }
 
 # Live ISO may not enable flakes/nix-command by default.
-# require-sigs=false lets nixos-anywhere copy store paths to the NVMe bootstrap.
+# require-sigs=false avoids signature errors when copying the closure (nixos-anywhere #616).
 export NIX_CONFIG="experimental-features = nix-command flakes
 require-sigs = false
-trusted-users = root"
+trusted-users = root
+substituters = https://cache.nixos.org
+trusted-substituters = https://cache.nixos.org"
 
 bold "==> Instalación NixOS: ${HOST}"
 echo "    Repo: ${REPO}"
@@ -87,12 +89,12 @@ if [[ "${confirm}" != "YES" ]]; then
 fi
 
 bold "==> Instalando (45–90 min, Ethernet conectado)"
-bold "    Compilación en disco NVMe (--build-on remote), no en USB live"
+bold "    Descarga binarios de cache.nixos.org (--build-on local, workaround firmas #616)"
 nix run github:nix-community/nixos-anywhere -- \
   --flake ".#${HOST}" \
   --generate-hardware-config nixos-generate-config "./hosts/${HOST}/hardware-configuration.nix" \
   --target-host root@127.0.0.1 \
-  --build-on remote \
+  --build-on local \
   --print-build-logs \
   --option require-sigs false \
   --option trusted-users root \
