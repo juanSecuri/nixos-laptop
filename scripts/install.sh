@@ -11,8 +11,11 @@ red() { printf '\033[0;31m%s\033[0m\n' "$*"; }
 green() { printf '\033[0;32m%s\033[0m\n' "$*"; }
 bold() { printf '\033[1m%s\033[0m\n' "$*"; }
 
-# Live ISO may not enable flakes/nix-command by default
-export NIX_CONFIG="experimental-features = nix-command flakes"
+# Live ISO may not enable flakes/nix-command by default.
+# require-sigs=false lets nixos-anywhere copy store paths to the NVMe bootstrap.
+export NIX_CONFIG="experimental-features = nix-command flakes
+require-sigs = false
+trusted-users = root"
 
 bold "==> Instalación NixOS: ${HOST}"
 echo "    Repo: ${REPO}"
@@ -36,6 +39,7 @@ fi
 
 cd "${REPO}"
 git fetch origin 2>/dev/null && git reset --hard origin/main 2>/dev/null || true
+git clean -fd 2>/dev/null || true
 
 bold "==> Liberar espacio en live USB (root pequeño, no compilar aquí)"
 swapoff /swapfile 2>/dev/null || true
@@ -90,6 +94,8 @@ nix run github:nix-community/nixos-anywhere -- \
   --target-host root@127.0.0.1 \
   --build-on remote \
   --print-build-logs \
+  --option require-sigs false \
+  --option trusted-users root \
   --option max-jobs 2 \
   --option cores 2
 
