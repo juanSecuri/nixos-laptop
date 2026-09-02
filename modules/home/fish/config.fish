@@ -9,6 +9,11 @@ starship init fish | source
 
 set -Ux PATH $HOME/.local/bin $PATH
 
+abbr -a rebuild 'sudo nixos-rebuild switch --flake ~/nixos-laptop#lenovo-v14'
+abbr -a update 'cd ~/nixos-laptop && nix flake update && sudo nixos-rebuild switch --flake .#lenovo-v14'
+abbr -a rollback 'sudo nixos-rebuild switch --rollback'
+abbr -a projects 'cd ~/Projects'
+
 function mark_prompt_start --on-event fish_prompt
     echo -en "\e]133;A\e\\"
 end

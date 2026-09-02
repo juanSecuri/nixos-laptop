@@ -32,13 +32,13 @@ curl -L https://downloader.cursor.sh/linux/appImage/x64 \
 chmod +x ~/.local/share/cursor/cursor.AppImage
 ```
 
-Abre Cursor desde Rofi (`Super + R`) o terminal: `cursor`.
+Abre Cursor con `Super + Shift + C`, desde el launcher de Quickshell, o en terminal: `cursor`.
 
 ---
 
 ## 3. Mixlr — La Palabra del Señor
 
-Edita la URL del canal en `home/jloaiza10/faith.nix`:
+Edita la URL del canal en `modules/home/faith.nix`:
 
 ```nix
 mixlrUrl = "https://mixlr.com/TU-CANAL";

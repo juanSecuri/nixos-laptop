@@ -25,5 +25,7 @@
     pkgs."git-lfs"
     pkgs."yq-go"
     pkgs.nixfmt-classic
+    direnv
+    nix-direnv
   ];
 }

@@ -19,6 +19,8 @@ in
     ./yazi.nix
     ./faith.nix
     ./git.nix
+    ./cursor.nix
+    ./dev.nix
   ];
 
   home.username = username;

@@ -52,7 +52,21 @@ rollback   # revertir última generación
 | `Super + P` | Menú de apagado |
 | `Super + E` | Archivos (Thunar) |
 | `Super + W` | Navegador (Librewolf) |
+| `Super + Shift + C` | Cursor IDE |
 | `Super + Shift + B` | La Palabra del Señor (Mixlr) |
+
+## Herramientas de desarrollo (system-wide)
+
+Incluidas vía `modules/dev/` — Python 3.11, uv, ruff, Node 22, pnpm, Java 21, Docker, PostgreSQL 16, Supabase CLI, Azure CLI, gh, chromedriver, tesseract, y más.
+
+```bash
+projects          # cd ~/Projects
+nix develop .#python
+nix develop .#node
+nix develop .#profit-catalyst
+```
+
+Cursor (AppImage): ver [docs/POST-INSTALL.md](docs/POST-INSTALL.md).
 
 ## Dev shells
 

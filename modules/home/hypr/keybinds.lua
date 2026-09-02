@@ -5,11 +5,13 @@ local mainMod = "SUPER"
 local terminal    = "alacritty"
 local fileManager = "thunar"
 local browser     = "librewolf"
+local editor      = "cursor"
 
 -- Applications
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(browser))
+hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd(editor))
 hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("la-palabra-del-senor"))
 
 -- Window management
