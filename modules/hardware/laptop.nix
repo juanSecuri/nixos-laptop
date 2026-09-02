@@ -42,10 +42,10 @@
     upower.enable = true;
   };
 
-  services.logind.settings.Login = {
-    HandleLidSwitch = "suspend";
-    HandleLidSwitchExternalPower = "ignore";
-    HandlePowerKey = "suspend";
+  services.logind = {
+    lidSwitch = "suspend";
+    lidSwitchExternalPower = "ignore";
+    powerKey = "suspend";
   };
 
   services.pulseaudio.enable = false;
