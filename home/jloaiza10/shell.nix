@@ -2,10 +2,9 @@
 {
   programs.zsh = {
     enable = true;
-    dotDir = config.home.homeDirectory;
     enableCompletion = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
+    enableAutosuggestions = true;
+    enableSyntaxHighlighting = true;
     history = {
       size = 50000;
       save = 50000;
@@ -22,7 +21,7 @@
       rollback = "sudo nixos-rebuild switch --rollback";
       projects = "cd ~/Projects";
     };
-    initContent = ''
+    initExtra = ''
       if command -v starship &>/dev/null; then
         eval "$(starship init zsh)"
       fi
