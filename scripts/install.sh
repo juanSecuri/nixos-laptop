@@ -6,8 +6,6 @@ set -euo pipefail
 REPO="${1:-/root/nixos-laptop}"
 HOST="lenovo-v14"
 DISK="/dev/nvme0n1"
-ROOT_PART="/dev/disk/by-partlabel/disk-main-root"
-NVME_STORE="local?root=/mnt/nix/store"
 
 red() { printf '\033[0;31m%s\033[0m\n' "$*"; }
 green() { printf '\033[0;32m%s\033[0m\n' "$*"; }
@@ -52,9 +50,10 @@ if ! grep -q 'doDoc = false' hosts/lenovo-v14/default.nix; then
 fi
 green "    Config actualizada (doDoc=false, nixos-24.11)"
 
-bold "==> Liberar espacio en live USB (root pequeño, no compilar aquí)"
+bold "==> Liberar espacio en live USB"
 swapoff /swapfile 2>/dev/null || true
 rm -f /swapfile 2>/dev/null || true
+umount -R /mnt 2>/dev/null || true
 nix-collect-garbage -d 2>/dev/null || true
 df -h / /nix
 free -h
@@ -97,40 +96,14 @@ if [[ "${confirm}" != "YES" ]]; then
   exit 1
 fi
 
-mount_nvme_store() {
-  bold "==> Preparar /nix en NVMe (evita llenar el USB live)"
-  mkdir -p /mnt/nix
-  if mountpoint -q /mnt/nix; then
-    umount /mnt/nix 2>/dev/null || true
-  fi
-  mount -o subvol=@nix "${ROOT_PART}" /mnt/nix
-  mkdir -p /mnt/nix/store
-  chmod 1775 /mnt/nix/store
-  if [[ ! -e /mnt/nix/store/store.db ]]; then
-    nix-store --store "${NVME_STORE}" --init 2>/dev/null || true
-  fi
-  nix-collect-garbage -d --store "${NVME_STORE}" 2>/dev/null || true
-  df -h /mnt/nix
-  green "    Store de compilación: ${NVME_STORE}"
-}
-
-# Partition first so @nix subvolume exists, then build on NVMe (hundreds of GB free).
-bold "==> Particionar disco (disko)"
-nix run github:nix-community/disko -- \
-  --mode disko \
-  --flake ".#${HOST}"
-
-mount_nvme_store
-
 bold "==> Instalando (45–90 min, Ethernet conectado)"
-bold "    Build en NVMe (${NVME_STORE}), no en USB live"
+bold "    Descarga de cache.nixos.org + install vía nixos-anywhere"
 nix run github:nix-community/nixos-anywhere -- \
   --flake ".#${HOST}" \
   --generate-hardware-config nixos-generate-config "./hosts/${HOST}/hardware-configuration.nix" \
   --target-host root@127.0.0.1 \
   --build-on local \
   --print-build-logs \
-  --option store "${NVME_STORE}" \
   --option require-sigs false \
   --option trusted-users root \
   --option max-jobs 1 \
