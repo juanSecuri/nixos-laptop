@@ -37,7 +37,11 @@
     };
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    # Skip doc builds (python3.11-doc fails on live USB; not needed on laptop)
+    doDoc = false;
+  };
 
   services.flatpak.enable = true;
 
