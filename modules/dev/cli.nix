@@ -24,6 +24,6 @@
     btop
     age
     sops
-    nixfmt
+    nixfmt-classic
   ];
 }

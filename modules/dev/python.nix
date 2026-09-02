@@ -5,7 +5,7 @@
 }:
 {
   environment.systemPackages = with pkgs; [
-    python311Minimal
+    python311
     python311Packages.pip
     python311Packages.virtualenv
     uv

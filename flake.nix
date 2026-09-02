@@ -46,7 +46,7 @@
 
       devShells.${system} = {
         default = pkgs.mkShell {
-          packages = [ pkgs.nixfmt ];
+          packages = [ pkgs.nixfmt-classic ];
         };
 
         python = pkgs.mkShell {
