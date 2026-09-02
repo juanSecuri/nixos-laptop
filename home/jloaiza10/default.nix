@@ -19,6 +19,7 @@ in
   imports = [
     ./hyprland.nix
     ./waybar.nix
+    ./rofi.nix
     ./kitty.nix
     ./shell.nix
     ./git.nix
@@ -38,7 +39,7 @@ in
   programs.home-manager.enable = true;
 
   home.sessionVariables = {
-    GTK_THEME = "Catppuccin-Mocha-Standard-Blue-Dark";
+    GTK_THEME = "Catppuccin-Mocha-Standard-Mauve-Dark";
     XCURSOR_THEME = "Bibata-Modern-Classic";
     XCURSOR_SIZE = "24";
   };
@@ -46,7 +47,7 @@ in
   gtk = {
     enable = true;
     theme = {
-      name = "Catppuccin-Mocha-Standard-Blue-Dark";
+      name = "Catppuccin-Mocha-Standard-Mauve-Dark";
       package = pkgs.catppuccin-gtk;
     };
     iconTheme = {

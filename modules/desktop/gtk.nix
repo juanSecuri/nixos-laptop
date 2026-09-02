@@ -5,7 +5,7 @@
 {
   # Thunar + apps GTK usan tema oscuro Catppuccin de forma consistente
   environment.variables = {
-    GTK_THEME = "Catppuccin-Mocha-Standard-Blue-Dark";
+    GTK_THEME = "Catppuccin-Mocha-Standard-Mauve-Dark";
     XCURSOR_THEME = "Bibata-Modern-Classic";
     XCURSOR_SIZE = "24";
   };

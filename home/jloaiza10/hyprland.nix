@@ -1,21 +1,4 @@
 { config, lib, pkgs, ... }:
-let
-  mocha = {
-    base = "#1e1e2e";
-    mantle = "#181825";
-    crust = "#11111b";
-    surface0 = "#313244";
-    surface1 = "#45475a";
-    text = "#cdd6f4";
-    subtext = "#a6adc8";
-    lavender = "#b4befe";
-    mauve = "#cba6f7";
-    blue = "#89b4fa";
-    green = "#a6e3a1";
-    red = "#f38ba8";
-    yellow = "#f9e2af";
-  };
-in
 {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -25,7 +8,6 @@ in
       monitor = ",preferred,auto,1";
 
       exec-once = [
-        "waybar"
         "hyprpaper -c ${config.home.homeDirectory}/.config/hypr/hyprpaper.conf"
         "mako"
         "hypridle"
@@ -41,33 +23,36 @@ in
         "QT_QPA_PLATFORMTHEME,qt6ct"
         "XDG_CURRENT_DESKTOP,Hyprland"
         "XDG_SESSION_TYPE,wayland"
+        "GTK_THEME,Catppuccin-Mocha-Standard-Mauve-Dark"
+        "XCURSOR_THEME,Bibata-Modern-Classic"
       ];
 
       general = {
-        gaps_in = 6;
-        gaps_out = 12;
-        border_size = 2;
-        "col.active_border" = "rgba(cba6f7ee) rgba(89b4faee) 45deg";
-        "col.inactive_border" = "rgba(313244aa)";
+        gaps_in = 5;
+        gaps_out = 16;
+        border_size = 3;
+        "col.active_border" =
+          lib.mkDefault "rgba(f38ba8ee) rgba(cba6f7ee) rgba(89b4faee) rgba(94e2d5ee) 45deg";
+        "col.inactive_border" = lib.mkDefault "rgba(313244aa)";
         layout = "dwindle";
         resize_on_border = true;
       };
 
       decoration = {
-        rounding = 10;
+        rounding = 14;
         active_opacity = 1.0;
-        inactive_opacity = 0.92;
+        inactive_opacity = 0.94;
         blur = {
           enabled = true;
-          size = 6;
-          passes = 2;
+          size = 8;
+          passes = 3;
           new_optimizations = true;
         };
         shadow = {
           enabled = true;
-          range = 18;
+          range = 22;
           render_power = 3;
-          color = "rgba(1a1a2eee)";
+          color = "rgba(1a1a2ecc)";
         };
       };
 
@@ -103,7 +88,6 @@ in
       };
 
       master.new_status = "master";
-
       gestures.workspace_swipe = true;
 
       misc = {
@@ -116,6 +100,9 @@ in
       bind = [
         "$mod, RETURN, exec, kitty"
         "$mod, Q, killactive,"
+        "$mod, W, killactive,"
+        "$mod SHIFT, Q, killactive,"
+        "$mod, DELETE, killactive,"
         "$mod, M, exit,"
         "$mod, E, exec, thunar"
         "$mod, V, togglefloating,"
@@ -164,11 +151,23 @@ in
         "$mod, mouse:273, resizewindow"
       ];
 
+      layerrule = [
+        "blur, rofi"
+        "ignorezero, rofi"
+        "blur, wlogout"
+        "ignorezero, wlogout"
+      ];
+
       windowrulev2 = [
         "float, class:^(pavucontrol)$"
         "float, class:^(blueman-manager)$"
+        "float, class:^(file_progress)$"
+        "float, class:^(confirm)$"
+        "float, class:^(dialog)$"
         "float, title:^(Picture-in-Picture)$"
         "pin, title:^(Picture-in-Picture)$"
+        "center, class:^(pavucontrol)$"
+        "size 50% 60%, class:^(pavucontrol)$"
       ];
     };
 
@@ -185,97 +184,4 @@ in
   '';
 
   home.file."Pictures/wallpaper.jpg".source = ../../assets/wallpapers/wallpaper.jpg;
-
-  home.file.".config/rofi/config.rasi".text = ''
-    configuration {
-      modi: "drun,run,window";
-      show-icons: true;
-      icon-theme: "Papirus-Dark";
-      font: "JetBrainsMono Nerd Font 12";
-      display-drun: "  Apps";
-      drun-display-format: "{name}";
-      location: 0;
-      yoffset: 20;
-      xoffset: 0;
-      fixed-num-lines: true;
-      lines: 10;
-      columns: 1;
-      width: 42%;
-      terminal: "kitty";
-    }
-
-    * {
-      background-color: transparent;
-      text-color: ${mocha.text};
-      border: 0;
-    }
-
-    window {
-      background-color: ${mocha.base};
-      border: 2px;
-      border-color: ${mocha.mauve};
-      border-radius: 20px;
-      padding: 20px;
-    }
-
-    inputbar {
-      background-color: ${mocha.mantle};
-      border-radius: 14px;
-      padding: 14px 18px;
-      margin-bottom: 14px;
-      children: [prompt, entry];
-      border: 1px solid ${mocha.surface0};
-    }
-
-    prompt {
-      text-color: ${mocha.mauve};
-      margin-right: 10px;
-    }
-
-    entry {
-      text-color: ${mocha.text};
-    }
-
-    listview {
-      lines: 10;
-      columns: 1;
-      spacing: 6px;
-      fixed-height: true;
-    }
-
-    element {
-      padding: 12px 16px;
-      border-radius: 12px;
-    }
-
-    element selected {
-      background-color: ${mocha.surface0};
-      text-color: ${mocha.lavender};
-    }
-
-    element-text {
-      background-color: transparent;
-    }
-
-    element-icon {
-      size: 28px;
-      margin: 0 10px 0 0;
-    }
-
-    mode-switcher {
-      spacing: 8px;
-    }
-
-    button {
-      padding: 8px 14px;
-      border-radius: 10px;
-      background-color: ${mocha.mantle};
-      text-color: ${mocha.subtext};
-    }
-
-    button selected {
-      background-color: ${mocha.mauve};
-      text-color: ${mocha.crust};
-    }
-  '';
 }
