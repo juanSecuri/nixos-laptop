@@ -25,6 +25,7 @@ in
       monitor = ",preferred,auto,1";
 
       exec-once = [
+        "waybar"
         "hyprpaper"
         "mako"
         "hypridle"
@@ -86,7 +87,7 @@ in
       };
 
       input = {
-        kb_layout = "us";
+        kb_layout = "latam";
         follow_mouse = 1;
         touchpad = {
           natural_scroll = true;
@@ -182,6 +183,8 @@ in
     wallpaper = ,${config.home.homeDirectory}/Pictures/wallpaper.jpg
   '';
 
+  home.file."Pictures/wallpaper.jpg".source = ../../assets/wallpapers/wallpaper.jpg;
+
   home.file.".config/rofi/config.rasi".text = ''
     configuration {
       modi: "drun,run,window";
@@ -193,11 +196,11 @@ in
       location: 0;
       yoffset: 15;
       xoffset: 0;
-      fixed-num-lines: false;
+      fixed-num-lines: true;
       lines: 8;
       columns: 1;
-      width: 36;
-      terminal: kitty;
+      width: 36%;
+      terminal: "kitty";
     }
 
     * {
