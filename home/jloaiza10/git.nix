@@ -1,13 +1,9 @@
 { ... }:
 {
-  programs.delta = {
-    enable = true;
-    enableGitIntegration = true;
-  };
-
   programs.git = {
     enable = true;
     lfs.enable = true;
+    delta.enable = true;
     settings = {
       user.name = "Juan Esteban Gallego Loaiza";
       user.email = "juan.gallego.sec@gmail.com";
