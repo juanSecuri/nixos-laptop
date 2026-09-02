@@ -12,7 +12,7 @@
 
   environment.systemPackages = with pkgs; [
     gvfs
-    tumbler
+    xfce.tumbler
     gnome.gnome-themes-extra
   ];
 
