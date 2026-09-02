@@ -6,7 +6,6 @@
       animation = "none";
       bigclock = false;
       hide_borders = true;
-      tty = 2;
     };
   };
 }
