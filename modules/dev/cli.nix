@@ -24,7 +24,7 @@
     pkgs."azure-cli"
     pkgs."git-lfs"
     pkgs."yq-go"
-    pkgs.nixfmt-classic
+    pkgs.nixfmt-rfc-style
     direnv
     nix-direnv
   ];

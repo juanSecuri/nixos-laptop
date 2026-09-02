@@ -50,7 +50,7 @@
 
       devShells.${system} = {
         default = pkgs.mkShell {
-          packages = [ pkgs.nixfmt-classic ];
+          packages = [ pkgs.nixfmt-rfc-style ];
         };
 
         python = pkgs.mkShell {
@@ -92,6 +92,6 @@
         };
       };
 
-      formatter.${system} = pkgs.nixfmt-classic;
+      formatter.${system} = pkgs.nixfmt-rfc-style;
     };
 }
