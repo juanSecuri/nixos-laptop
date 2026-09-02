@@ -43,16 +43,6 @@ in
     XCURSOR_SIZE = "24";
   };
 
-  dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
-      gtk-theme = "Catppuccin-Mocha-Standard-Blue-Dark";
-      icon-theme = "Papirus-Dark";
-      cursor-theme = "Bibata-Modern-Classic";
-      font-name = "Cantarell 11";
-    };
-  };
-
   gtk = {
     enable = true;
     theme = {
