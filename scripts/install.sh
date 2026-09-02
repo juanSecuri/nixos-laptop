@@ -10,7 +10,6 @@ REPO="${1:-/root/nixos-laptop}"
 HOST="lenovo-v14"
 DISK="/dev/nvme0n1"
 ROOT_PART="/dev/disk/by-partlabel/disk-main-root"
-NVME_STORE="local?root=/mnt/nix/store"
 
 red() { printf '\033[0;31m%s\033[0m\n' "$*"; }
 green() { printf '\033[0;32m%s\033[0m\n' "$*"; }
@@ -96,44 +95,40 @@ if [[ "${confirm}" != "YES" ]]; then
   exit 1
 fi
 
+# Overlay store: USB store stays readable (lower), new builds go to NVMe (upper).
+# Plain bind-mounting an empty NVMe store breaks rm/nix on the live ISO.
 use_nvme_store() {
-  bold "==> Usar /nix del NVMe para compilar (USB live no tiene espacio)"
+  bold "==> Store overlay: USB (lectura) + NVMe (escritura para compilar)"
   mkdir -p /mnt/nix
   umount /mnt/nix 2>/dev/null || true
   mount -o subvol=@nix "${ROOT_PART}" /mnt/nix
-  mkdir -p /mnt/nix/store
-  chmod 1775 /mnt/nix/store
 
-  if [[ ! -e /mnt/nix/store/store.db ]]; then
-    nix-store --store "${NVME_STORE}" --init
-  fi
+  local upper="/mnt/nix/store-upper"
+  local work="/mnt/nix/store-work"
+  local merged="/mnt/nix/store-merged"
+  mkdir -p "${upper}" "${work}" "${merged}"
 
-  bold "    Copiando sistema live al store del NVMe (necesario antes del bind mount)..."
-  nix copy --to "${NVME_STORE}" /run/current-system
-
-  bold "    Copiando herramientas ya descargadas (disko, nixos-anywhere)..."
-  nix copy --to "${NVME_STORE}" \
-    github:nix-community/disko \
-    github:nix-community/nixos-anywhere \
-    2>/dev/null || true
+  mount -t overlay overlay \
+    -o "lowerdir=/nix/store,upperdir=${upper},workdir=${work}" \
+    "${merged}"
 
   systemctl stop nix-daemon 2>/dev/null || true
   umount /nix/store 2>/dev/null || true
-  mount --bind /mnt/nix/store /nix/store
+  mount --bind "${merged}" /nix/store
   systemctl start nix-daemon 2>/dev/null || true
+
+  export TMPDIR="/mnt/nix/tmp"
+  mkdir -p "${TMPDIR}"
 
   export PATH="/run/current-system/sw/bin:/run/wrappers/bin:${PATH:-}"
 
-  if ! command -v nix >/dev/null 2>&1 || ! command -v rm >/dev/null 2>&1; then
-    red "ERROR: el bind mount dejó el live USB inutilizable."
-    red "  Reinicia desde el USB live y vuelve a ejecutar este script."
+  if ! /run/current-system/sw/bin/test -x /run/current-system/sw/bin/rm; then
+    red "ERROR: overlay store falló — reinicia el live USB y reintenta."
     exit 1
   fi
 
-  if command -v df >/dev/null 2>&1; then
-    df -h /nix/store /mnt/nix 2>/dev/null || true
-  fi
-  green "    Nix store en NVMe (bind mount activo)"
+  df -h /nix/store /mnt/nix 2>/dev/null || true
+  green "    Overlay activo: compilación en NVMe, herramientas del USB intactas"
 }
 
 bold "==> Particionar disco (disko)"
