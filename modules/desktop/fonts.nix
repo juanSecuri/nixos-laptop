@@ -9,10 +9,10 @@
     packages = with pkgs; [
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
-      noto-fonts
-      noto-fonts-color-emoji
-      cantarell-fonts
-      font-awesome
+      pkgs."noto-fonts"
+      pkgs."noto-fonts-color-emoji"
+      pkgs."cantarell-fonts"
+      pkgs."font-awesome"
     ];
   };
 }
