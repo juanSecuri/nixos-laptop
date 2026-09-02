@@ -65,11 +65,7 @@ in
 
   xdg = {
     enable = true;
-    userDirs = {
-      enable = true;
-      createDirectories = true;
-      setSessionVariables = true;
-    };
+    userDirs.enable = true;
   };
 
   services.mako = {
