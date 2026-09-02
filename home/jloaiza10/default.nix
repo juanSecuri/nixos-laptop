@@ -91,7 +91,7 @@ in
     wofi
     mako
     xfce.thunar
-    xfce.file-roller
+    file-roller
     xdg-utils
     wl-clipboard
     cliphist
