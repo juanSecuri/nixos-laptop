@@ -17,7 +17,8 @@
       "amdgpu.backlight=0"
       "acpi_osi=Linux"
     ];
-    kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
+    # linuxPackages (not _latest) — better binary cache coverage on live USB install
+    kernelPackages = lib.mkDefault pkgs.linuxPackages;
     kernelModules = lib.mkAfter [ "snd_hda_intel" ];
   };
 
@@ -28,7 +29,9 @@
     bluetooth.enable = true;
     graphics = {
       enable = true;
-      enable32Bit = true;
+      # Off during install — avoids building mesa 32-bit on space-limited live USB.
+      # Enable later with: rebuild after setting enable32Bit = true
+      enable32Bit = false;
     };
   };
 
