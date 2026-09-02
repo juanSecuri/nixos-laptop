@@ -5,5 +5,6 @@
     ./sddm.nix
     ./fonts.nix
     ./portals.nix
+    ./gtk.nix
   ];
 }

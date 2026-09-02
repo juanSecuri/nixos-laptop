@@ -26,7 +26,7 @@ in
 
       exec-once = [
         "waybar"
-        "hyprpaper"
+        "hyprpaper -c ${config.home.homeDirectory}/.config/hypr/hyprpaper.conf"
         "mako"
         "hypridle"
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
@@ -149,6 +149,7 @@ in
         "$mod SHIFT, F, fullscreen, 1"
         "$mod, SPACE, exec, rofi -show drun -show-icons"
         "$mod SHIFT, B, exec, la-palabra-del-senor"
+        "$mod SHIFT, E, exec, wlogout"
         ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"
         "$mod, Print, exec, grim -g \"$(slurp)\" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"
         ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
@@ -190,16 +191,16 @@ in
       modi: "drun,run,window";
       show-icons: true;
       icon-theme: "Papirus-Dark";
-      font: "JetBrainsMono Nerd Font 11";
-      display-drun: "Apps";
+      font: "JetBrainsMono Nerd Font 12";
+      display-drun: "  Apps";
       drun-display-format: "{name}";
       location: 0;
-      yoffset: 15;
+      yoffset: 20;
       xoffset: 0;
       fixed-num-lines: true;
-      lines: 8;
+      lines: 10;
       columns: 1;
-      width: 36%;
+      width: 42%;
       terminal: "kitty";
     }
 
@@ -213,30 +214,38 @@ in
       background-color: ${mocha.base};
       border: 2px;
       border-color: ${mocha.mauve};
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: 20px;
+      padding: 20px;
     }
 
     inputbar {
       background-color: ${mocha.mantle};
-      border-radius: 12px;
-      padding: 12px 16px;
-      margin-bottom: 12px;
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
       children: [prompt, entry];
+      border: 1px solid ${mocha.surface0};
     }
 
     prompt {
       text-color: ${mocha.mauve};
-      margin-right: 8px;
+      margin-right: 10px;
     }
 
     entry {
       text-color: ${mocha.text};
     }
 
+    listview {
+      lines: 10;
+      columns: 1;
+      spacing: 6px;
+      fixed-height: true;
+    }
+
     element {
-      padding: 10px 14px;
-      border-radius: 10px;
+      padding: 12px 16px;
+      border-radius: 12px;
     }
 
     element selected {
@@ -249,7 +258,24 @@ in
     }
 
     element-icon {
-      size: 24px;
+      size: 28px;
+      margin: 0 10px 0 0;
+    }
+
+    mode-switcher {
+      spacing: 8px;
+    }
+
+    button {
+      padding: 8px 14px;
+      border-radius: 10px;
+      background-color: ${mocha.mantle};
+      text-color: ${mocha.subtext};
+    }
+
+    button selected {
+      background-color: ${mocha.mauve};
+      text-color: ${mocha.crust};
     }
   '';
 }

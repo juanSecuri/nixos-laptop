@@ -26,6 +26,7 @@ in
     ./faith.nix
     ./hyprlock.nix
     ./hypridle.nix
+    ./wlogout.nix
   ];
 
   home = {
@@ -35,6 +36,24 @@ in
   };
 
   programs.home-manager.enable = true;
+
+  programs.dconf.enable = true;
+
+  home.sessionVariables = {
+    GTK_THEME = "Catppuccin-Mocha-Standard-Blue-Dark";
+    XCURSOR_THEME = "Bibata-Modern-Classic";
+    XCURSOR_SIZE = "24";
+  };
+
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      gtk-theme = "Catppuccin-Mocha-Standard-Blue-Dark";
+      icon-theme = "Papirus-Dark";
+      cursor-theme = "Bibata-Modern-Classic";
+      font-name = "Cantarell 11";
+    };
+  };
 
   gtk = {
     enable = true;
@@ -55,7 +74,16 @@ in
       name = "Cantarell";
       package = pkgs.cantarell-fonts;
     };
-    gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+      gtk-enable-primary-paste = true;
+    };
+    gtk4 = {
+      enable = true;
+      extraConfig = {
+        gtk-application-prefer-dark-theme = true;
+      };
+    };
   };
 
   qt = {
@@ -104,5 +132,8 @@ in
     hyprpaper
     hyprlock
     hypridle
+    wlogout
+    gvfs
+    tumbler
   ];
 }
