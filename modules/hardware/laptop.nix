@@ -48,7 +48,7 @@
     powerKey = "suspend";
   };
 
-  services.pulseaudio.enable = false;
+  # PipeWire replaces PulseAudio (services.pulseaudio removed in 24.11+)
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
