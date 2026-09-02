@@ -6,7 +6,7 @@ set -euo pipefail
 REPO="${1:-/root/nixos-laptop}"
 HOST="lenovo-v14"
 DISK="/dev/nvme0n1"
-EXTRAS="${REPO}/scripts/nix-anywhere-extras"
+ROOT_PART="/dev/disk/by-partlabel/disk-main-root"
 
 red() { printf '\033[0;31m%s\033[0m\n' "$*"; }
 green() { printf '\033[0;32m%s\033[0m\n' "$*"; }
@@ -92,14 +92,41 @@ if [[ "${confirm}" != "YES" ]]; then
   exit 1
 fi
 
+use_nvme_store() {
+  bold "==> Usar /nix del NVMe para compilar (USB live no tiene espacio)"
+  mkdir -p /mnt/nix
+  umount /mnt/nix 2>/dev/null || true
+  mount -o subvol=@nix "${ROOT_PART}" /mnt/nix
+  mkdir -p /mnt/nix/store
+  chmod 1775 /mnt/nix/store
+  if [[ ! -e /mnt/nix/store/store.db ]]; then
+    nix-store --store "local?root=/mnt/nix/store" --init 2>/dev/null || true
+  fi
+
+  systemctl stop nix-daemon 2>/dev/null || true
+  umount /nix/store 2>/dev/null || true
+  mount --bind /mnt/nix/store /nix/store
+  systemctl start nix-daemon 2>/dev/null || true
+
+  df -h /nix/store /mnt/nix
+  green "    Nix store en NVMe (bind mount activo)"
+}
+
+bold "==> Particionar disco (disko)"
+nix run github:nix-community/disko -- \
+  --mode disko \
+  --flake ".#${HOST}"
+
+use_nvme_store
+
 bold "==> Instalando (45–90 min, Ethernet conectado)"
-bold "    Build en disco NVMe (--build-on remote), USB solo orquesta"
+bold "    build-on local + disko-mode mount (sin reparticionar, sin error de firmas)"
 nix run github:nix-community/nixos-anywhere -- \
   --flake ".#${HOST}" \
   --generate-hardware-config nixos-generate-config "./hosts/${HOST}/hardware-configuration.nix" \
   --target-host root@127.0.0.1 \
-  --build-on remote \
-  --extra-files "${EXTRAS}" \
+  --build-on local \
+  --disko-mode mount \
   --print-build-logs \
   --option require-sigs false \
   --option trusted-users root \
