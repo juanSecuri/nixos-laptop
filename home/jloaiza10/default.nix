@@ -115,7 +115,5 @@ in
     hyprlock
     hypridle
     wlogout
-    gvfs
-    tumbler
   ];
 }
