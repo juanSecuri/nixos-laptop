@@ -59,7 +59,7 @@
             uv
             ruff
             tesseract
-            poppler_utils
+            poppler-utils
           ];
           shellHook = "echo 'Python shell — FastAPI / OCR / Supabase'";
         };
@@ -78,7 +78,7 @@
             uv
             ruff
             tesseract
-            poppler_utils
+            poppler-utils
             chromedriver
             geckodriver
             pkgs.docker-compose
