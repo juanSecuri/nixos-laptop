@@ -16,9 +16,10 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-    quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-    awww.url = "git+https://codeberg.org/LGFae/awww?ref=main";
-    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -50,7 +51,7 @@
 
       devShells.${system} = {
         default = pkgs.mkShell {
-          packages = [ pkgs.nixfmt-rfc-style ];
+          packages = [ pkgs.nixfmt ];
         };
 
         python = pkgs.mkShell {
@@ -92,6 +93,6 @@
         };
       };
 
-      formatter.${system} = pkgs.nixfmt-rfc-style;
+      formatter.${system} = pkgs.nixfmt;
     };
 }

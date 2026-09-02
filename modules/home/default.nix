@@ -1,9 +1,4 @@
-{ pkgs, inputs, username, ... }:
-
-let
-  awww = inputs.awww;
-  system = pkgs.stdenv.hostPlatform.system;
-in
+{ pkgs, username, ... }:
 {
   imports = [
     ./hypr/default.nix
@@ -33,7 +28,7 @@ in
   home.packages = with pkgs; [
     wl-clipboard
     libnotify
-    awww.packages.${system}.awww
+    awww
     mako
   ];
 
