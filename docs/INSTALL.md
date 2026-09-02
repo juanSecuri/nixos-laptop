@@ -56,8 +56,9 @@ Escribe **`YES`** cuando lo pida.
 ## Paso 4 — Primer arranque
 
 1. Saca el USB y reinicia.
-2. Login en **SDDM** → usuario `jloaiza10`.
+2. Login en **SDDM** → usuario `jloaiza10`, contraseña `NixOS2026!`.
 3. Sesión **Hyprland**.
+4. Cambia la contraseña: `passwd`
 
 ```bash
 cat /etc/os-release   # debe decir NixOS

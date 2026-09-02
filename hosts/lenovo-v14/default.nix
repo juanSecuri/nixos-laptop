@@ -60,6 +60,8 @@
       "video"
       "audio"
     ];
+    # First boot / fresh install. Change with: passwd
+    initialHashedPassword = "$6$K9m.WagzaNM30RTK$Z4r/WaxvNjo9y.tazz/qC62em4RfU12MtesrPdUX2.v3q50OWebNrrmYwtT5QwQRaahuoufIz/TZwomyyAMLY0";
     # Añade tu clave SSH antes de instalar (recomendado):
     # openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAA... jloaiza10@lenovo-v14" ];
   };
