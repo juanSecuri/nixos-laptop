@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   home.sessionVariables = {
-    EDITOR = "cursor";
-    VISUAL = "cursor";
+    EDITOR = lib.mkForce "cursor";
+    VISUAL = lib.mkForce "cursor";
     TERMINAL = "alacritty";
     BROWSER = "librewolf";
     XDG_CURRENT_DESKTOP = "Hyprland";
@@ -17,4 +17,9 @@
     enable = true;
     nix-direnv.enable = true;
   };
+
+  # Remove leftover configs from the old Waybar/Rofi/SDDM stack
+  home.activation.removeStaleDesktopConfigs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    rm -rf "$HOME/.config/rofi" "$HOME/.config/waybar" "$HOME/.config/wlogout" 2>/dev/null || true
+  '';
 }

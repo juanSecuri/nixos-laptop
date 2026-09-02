@@ -1,17 +1,12 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, lib, ... }:
 let
   cava-dynamic = pkgs.writeShellScriptBin "cava" ''
-  # make sure cava exists if not creates folder
     mkdir -p ~/.config/cava
-    
-    # Combines static Nix config and the dynamic Matugen colors
     cat ~/.config/cava/config_base ~/.config/cava/colors > ~/.config/cava/config 2>/dev/null
-    
-    # Launch the actual CAVA binary
     exec ${pkgs.cava}/bin/cava "$@"
   '';
 in
 {
   home.packages = [ (lib.hiPrio cava-dynamic) ];
-  xdg.configFile."cava".source = config.lib.file.mkOutOfStoreSymlink "/etc/nixos/modules/home/cava/";
+  xdg.configFile."cava".source = ./.;
 }

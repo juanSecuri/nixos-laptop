@@ -1,9 +1,9 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   programs.neovim = {
     enable = true;
-    defaultEditor = true;
+    defaultEditor = false;
     viAlias = true;
     vimAlias = true;
 
@@ -58,5 +58,5 @@ plugins = with pkgs.vimPlugins; [
 ];
   };
 
-  xdg.configFile."nvim/init.lua".source = config.lib.file.mkOutOfStoreSymlink "/etc/nixos/modules/home/nvim/init.lua";
+  xdg.configFile."nvim/init.lua".source = ./init.lua;
 }
