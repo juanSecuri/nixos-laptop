@@ -7,8 +7,7 @@
     enableDefaultPackages = true;
     fontconfig.enable = true;
     packages = [
-      pkgs.nerdfonts."jetbrains-mono"
-      pkgs.nerdfonts."symbols-only"
+      (pkgs.nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
       pkgs."noto-fonts"
       pkgs."noto-fonts-color-emoji"
       pkgs."cantarell-fonts"
