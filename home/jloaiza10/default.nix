@@ -90,8 +90,8 @@ in
     rofi
     wofi
     mako
-    thunar
-    file-roller
+    xfce.thunar
+    xfce.file-roller
     xdg-utils
     wl-clipboard
     cliphist
