@@ -39,8 +39,13 @@
 
   nixpkgs.config = {
     allowUnfree = true;
-    # Skip doc builds (python3.11-doc fails on live USB; not needed on laptop)
     doDoc = false;
+  };
+
+  documentation = {
+    enable = lib.mkDefault false;
+    man.enable = lib.mkDefault false;
+    info.enable = lib.mkDefault false;
   };
 
   services.flatpak.enable = true;
@@ -76,5 +81,5 @@
     git
   ];
 
-  system.stateVersion = "25.05";
+  system.stateVersion = "24.11";
 }

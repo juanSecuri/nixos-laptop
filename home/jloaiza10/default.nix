@@ -31,7 +31,7 @@ in
   home = {
     username = "jloaiza10";
     homeDirectory = "/home/jloaiza10";
-    stateVersion = "25.05";
+    stateVersion = "24.11";
   };
 
   programs.home-manager.enable = true;

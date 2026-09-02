@@ -45,6 +45,13 @@ cd "${REPO}"
 git fetch origin 2>/dev/null && git reset --hard origin/main 2>/dev/null || true
 git clean -fd 2>/dev/null || true
 
+if ! grep -q 'doDoc = false' hosts/lenovo-v14/default.nix; then
+  red "ERROR: Repo desactualizado. Sin conexión a GitHub?"
+  red "  git fetch origin && git reset --hard origin/main"
+  exit 1
+fi
+green "    Config actualizada (doDoc=false, nixos-24.11)"
+
 bold "==> Liberar espacio en live USB (root pequeño, no compilar aquí)"
 swapoff /swapfile 2>/dev/null || true
 rm -f /swapfile 2>/dev/null || true
@@ -102,6 +109,7 @@ mount_nvme_store() {
   if [[ ! -e /mnt/nix/store/store.db ]]; then
     nix-store --store "${NVME_STORE}" --init 2>/dev/null || true
   fi
+  nix-collect-garbage -d --store "${NVME_STORE}" 2>/dev/null || true
   df -h /mnt/nix
   green "    Store de compilación: ${NVME_STORE}"
 }
