@@ -37,8 +37,6 @@ in
 
   programs.home-manager.enable = true;
 
-  programs.dconf.enable = true;
-
   home.sessionVariables = {
     GTK_THEME = "Catppuccin-Mocha-Standard-Blue-Dark";
     XCURSOR_THEME = "Bibata-Modern-Classic";
