@@ -74,18 +74,18 @@ in
 
   services.mako = {
     enable = true;
-    settings = {
-      font = "JetBrainsMono Nerd Font 10";
-      background-color = mocha.mantle;
-      text-color = mocha.text;
-      border-color = mocha.mauve;
-      border-size = 2;
-      border-radius = 10;
-      default-timeout = 5000;
-      anchor = "top-right";
-      margin = "12";
-      padding = "12";
-    };
+    extraConfig = ''
+      font=JetBrainsMono Nerd Font 10
+      background-color=${mocha.mantle}
+      text-color=${mocha.text}
+      border-color=${mocha.mauve}
+      border-size=2
+      border-radius=10
+      default-timeout=5000
+      anchor=top-right
+      margin=12
+      padding=12
+    '';
   };
 
   home.packages = with pkgs; [
