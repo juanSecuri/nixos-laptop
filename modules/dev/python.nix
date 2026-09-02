@@ -13,7 +13,7 @@
     mypy
     # OCR / document processing (contableIA, bookepping-cleanup-agent)
     tesseract
-    poppler-utils
+    poppler_utils
     qpdf
     imagemagick
     # The Profit Catalyst — Selenium / scraping (sistema-contable-dian-siigo)

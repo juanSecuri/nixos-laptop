@@ -5,14 +5,11 @@
 }:
 {
   environment.systemPackages = with pkgs; [
-    azure-cli
     gh
-    git-lfs
     delta
     lazygit
     gnumake
     jq
-    yq-go
     httpie
     ripgrep
     fd
@@ -24,6 +21,9 @@
     btop
     age
     sops
-    nixfmt-classic
+    pkgs."azure-cli"
+    pkgs."git-lfs"
+    pkgs."yq-go"
+    pkgs.nixfmt-classic
   ];
 }

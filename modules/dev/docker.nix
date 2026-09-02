@@ -13,8 +13,8 @@
   };
 
   environment.systemPackages = with pkgs; [
-    docker-compose
-    docker-buildx
+    pkgs.docker-compose
+    pkgs.docker-buildx
     lazydocker
     dive
   ];

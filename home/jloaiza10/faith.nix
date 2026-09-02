@@ -12,7 +12,7 @@ in
   home.packages = with pkgs; [
     firefox
     mpv
-    yt-dlp
+    pkgs."yt-dlp"
   ];
 
   home.file.".local/bin/la-palabra-del-senor".text = ''

@@ -12,7 +12,7 @@
     defaultSession = "hyprland";
   };
 
-  environment.systemPackages = with pkgs; [
-    catppuccin-sddm-corners
+  environment.systemPackages = [
+    pkgs."catppuccin-sddm-corners"
   ];
 }

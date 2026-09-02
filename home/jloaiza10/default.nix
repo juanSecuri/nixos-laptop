@@ -85,15 +85,15 @@ in
   };
 
   home.packages = with pkgs; [
-    catppuccin-gtk
-    papirus-icon-theme
+    pkgs."catppuccin-gtk"
+    pkgs."papirus-icon-theme"
     rofi
     wofi
     mako
     xfce.thunar
-    file-roller
-    xdg-utils
-    wl-clipboard
+    pkgs."file-roller"
+    pkgs."xdg-utils"
+    pkgs."wl-clipboard"
     cliphist
     grim
     slurp

@@ -8,7 +8,7 @@
     postgresql_16
     sqlite
     sqlfluff
-    supabase-cli
+    pkgs."supabase-cli"
     pgcli
   ];
 
