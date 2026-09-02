@@ -16,3 +16,6 @@ secrets/*.age
 
 # Cursor AppImage download cache
 .home-manager/cursor/
+
+# Local reference clone (ashvr0/NixOS-Config)
+.ashvr0-ref/

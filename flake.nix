@@ -2,10 +2,10 @@
   description = "NixOS laptop — Lenovo V14 G4 ABP (jloaiza10)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -15,6 +15,10 @@
     };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+    awww.url = "git+https://codeberg.org/LGFae/awww?ref=main";
+    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
   };
 
   outputs =

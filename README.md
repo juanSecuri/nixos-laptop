@@ -4,7 +4,7 @@ Configuración declarativa de NixOS para **jloaiza10** — Lenovo V14 G4 ABP (Ry
 
 | | |
 |---|---|
-| **Escritorio** | Hyprland · Catppuccin Mocha · SDDM · Waybar · Rofi |
+| **Escritorio** | Hyprland · Quickshell · LY · Matugen · awww · Alacritty |
 | **Desarrollo** | Python 3.11 · Node 22 · Java 21 · Docker · Supabase · Azure · gh |
 | **Fe / audio** | Mixlr (La Palabra del Señor) · Biblia YouVersion · Firefox · mpv |
 | **Instalación** | USB Minimal ISO → `bash scripts/install.sh` |
@@ -25,12 +25,12 @@ bash /root/nixos-laptop/scripts/install.sh
 flake.nix
 hosts/lenovo-v14/       # Host, disko, hardware-config
 modules/
+  core/                 # Hyprland, LY, paquetes, fuentes, portales
+  home/                 # Quickshell, Hypr Lua, Alacritty, fe/Mixlr, Neovim
   hardware/             # AMD laptop, PipeWire, kernel
   boot/                 # systemd-boot, Plymouth
-  desktop/              # Hyprland, SDDM Catppuccin, fonts, portals
   dev/                  # Python, Node, Java, Docker, DB, CLI
   system/               # Red, locale, SSH
-home/jloaiza10/         # Hyprland, Waybar, Kitty, fe/Mixlr, Cursor
 scripts/                # install.sh, preflight.sh
 docs/                   # INSTALL, POST-INSTALL, TROUBLESHOOTING
 ```
@@ -47,9 +47,11 @@ rollback   # revertir última generación
 
 | Atajo | Acción |
 |-------|--------|
-| `Super + Return` | Terminal |
-| `Super + R` | Apps |
-| `Super + E` | Archivos |
+| `Super + T` | Terminal (Alacritty) |
+| `Super + SUPER_L` | Launcher (Quickshell) |
+| `Super + P` | Menú de apagado |
+| `Super + E` | Archivos (Thunar) |
+| `Super + W` | Navegador (Librewolf) |
 | `Super + Shift + B` | La Palabra del Señor (Mixlr) |
 
 ## Dev shells

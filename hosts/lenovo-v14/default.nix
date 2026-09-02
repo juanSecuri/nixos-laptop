@@ -11,9 +11,9 @@
     ./disko.nix
     ./hardware-configuration.nix
 
+    ../../modules/core
     ../../modules/hardware/laptop.nix
     ../../modules/boot/boot.nix
-    ../../modules/desktop/default.nix
     ../../modules/dev/default.nix
     ../../modules/system/networking.nix
     ../../modules/system/locale.nix
@@ -62,8 +62,6 @@
     ];
     # First boot / fresh install. Change with: passwd
     initialHashedPassword = "$6$K9m.WagzaNM30RTK$Z4r/WaxvNjo9y.tazz/qC62em4RfU12MtesrPdUX2.v3q50OWebNrrmYwtT5QwQRaahuoufIz/TZwomyyAMLY0";
-    # Añade tu clave SSH antes de instalar (recomendado):
-    # openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAA... jloaiza10@lenovo-v14" ];
   };
 
   home-manager = {
@@ -73,15 +71,11 @@
     extraSpecialArgs = {
       inherit inputs username;
     };
-    users.${username} = import ../../home/${username};
+    users.${username}.imports = [
+      ../../modules/home
+      inputs.spicetify-nix.homeManagerModules.default
+    ];
   };
-
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    curl
-    git
-  ];
 
   system.stateVersion = "24.11";
 }

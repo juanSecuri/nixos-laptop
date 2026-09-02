@@ -1,0 +1,68 @@
+{ pkgs, inputs, ... }:
+let
+  system = pkgs.stdenv.hostPlatform.system;
+  quickshell = inputs.quickshell;
+  awww = inputs.awww;
+in
+{
+  environment.systemPackages =
+    [
+      quickshell.packages.${system}.default
+      awww.packages.${system}.awww
+    ]
+    ++ (with pkgs; [
+      bash
+      git
+      ripgrep
+      fd
+      jq
+      tree-sitter
+      pam
+      python3
+      openvpn
+      vlc
+      yt-dlp
+      playerctl
+      obsidian
+      hypridle
+      slurp
+      grim
+      cliphist
+      alacritty
+      fish
+      starship
+      btop
+      vscodium
+      rustc
+      cargo
+      nodejs
+      qt6.qtwayland
+      gcc
+      gnumake
+      pkg-config
+      yazi
+      thunar
+      unzip
+      libreoffice
+      librewolf
+      ffmpeg
+      mesa
+      mesa-demos
+      libglvnd
+      papirus-icon-theme
+      nordic
+      matugen
+      fastfetch
+      cbonsai
+      cmatrix
+      cava
+      peaclock
+      lavat
+      pipes
+      mpvpaper
+      brightnessctl
+      wl-clipboard
+      libnotify
+      mako
+    ]);
+}
