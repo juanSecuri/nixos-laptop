@@ -1,4 +1,10 @@
-{ ... }:
+{ pkgs, ... }:
+let
+  configFish = builtins.readFile ./config.fish;
+in
 {
-  xdg.configFile."fish".source = ./.;
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = configFish;
+  };
 }

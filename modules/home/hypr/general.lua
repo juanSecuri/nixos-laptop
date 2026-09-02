@@ -9,9 +9,9 @@ hl.monitor({
 -- LOOK AND FEEL
 hl.config({
     general = {
-        gaps_in  = 4,
-        gaps_out = 20,
-        border_size = 3,
+        gaps_in  = 3,
+        gaps_out = 10,
+        border_size = 2,
 
         col = {
             active_border   = { colors = { active_border1, active_border2 }, angle = 45 },
@@ -23,24 +23,24 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 18,
-        rounding_power = 2.4,
-        active_opacity   = 0.95,
-        inactive_opacity = 0.90,
+        rounding       = 8,
+        rounding_power = 1.2,
+        active_opacity   = 1.0,
+        inactive_opacity = 0.92,
 
         shadow = {
             enabled      = true,
-            range        = 25,
-            render_power = 3,
-            color        = 0xee1a1a1a,
+            range        = 12,
+            render_power = 2,
+            color        = 0x66000000,
         },
 
         blur = {
             enabled   = true,
-            size      = 8,
+            size      = 4,
             passes    = 2,
-            vibrancy  = 0.2,
-            noise = 0.02,
+            vibrancy  = 0.1,
+            noise = 0.01,
         },
     },
     animations = {
@@ -59,8 +59,8 @@ hl.animation({ leaf = "global",        enabled = true,  speed = 10,   bezier = "
 hl.animation({ leaf = "border",        enabled = true,  speed = 4.8, bezier = "easeOutQuint" })
 -- Windows
 hl.animation({ leaf = "windows",       enabled = true,  speed = 4.79, spring = "easy" })
-hl.animation({ leaf = "windowsIn",     enabled = true,  speed = 4.1,  spring = "easy",         style = "popin 87%" })
-hl.animation({ leaf = "windowsOut",    enabled = true,  speed = 1.49, bezier = "linear",       style = "popin 87%" })
+hl.animation({ leaf = "windowsIn",     enabled = true,  speed = 2.0,  bezier = "easeOutQuint", style = "fade" })
+hl.animation({ leaf = "windowsOut",    enabled = true,  speed = 1.2, bezier = "linear",       style = "fade" })
 hl.animation({ leaf = "windowsMove",   enabled = true, speed = 4.0, bezier = "easeOutQuint" })
 hl.animation({ leaf = "fadeSwitch",    enabled = true, speed = 1.2, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeDim",       enabled = true, speed = 1.6, bezier = "almostLinear" })

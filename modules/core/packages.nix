@@ -41,16 +41,10 @@
     mesa
     mesa-demos
     libglvnd
-    papirus-icon-theme
-    nordic
-    matugen
+      papirus-icon-theme
+      bibata-cursors
+      matugen
     fastfetch
-    cbonsai
-    cmatrix
-    cava
-    peaclock
-    lavat
-    pipes
     mpvpaper
     brightnessctl
     wl-clipboard

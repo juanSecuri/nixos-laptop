@@ -6,7 +6,6 @@
     ./alacritty/default.nix
     ./fish/default.nix
     ./btop/btop.nix
-    ./cava/default.nix
     ./spicetify/spicetify.nix
     ./matugen/default.nix
     ./nvim/default.nix
@@ -16,6 +15,7 @@
     ./git.nix
     ./cursor.nix
     ./dev.nix
+    ./gtk.nix
   ];
 
   home.username = username;
@@ -32,5 +32,19 @@
     mako
   ];
 
-  services.mako.enable = true;
+  services.mako = {
+    enable = true;
+    extraConfig = ''
+      font=JetBrainsMono Nerd Font 10
+      background-color=#1e1e2e
+      text-color=#cdd6f4
+      border-color=#89b4fa
+      border-size=1
+      border-radius=8
+      default-timeout=4000
+      anchor=top-right
+      margin=10
+      padding=10
+    '';
+  };
 }

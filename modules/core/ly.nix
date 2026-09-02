@@ -1,10 +1,12 @@
-{ host, lib, ... }:
+{ lib, ... }:
 {
   services.displayManager.ly = {
     enable = true;
     settings = {
-      animation = "matrix";
-      bigclock = true;
+      animation = "none";
+      bigclock = false;
+      hide_borders = true;
+      tty = 2;
     };
   };
 }
