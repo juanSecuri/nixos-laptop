@@ -30,10 +30,7 @@ in
         };
         Users = {
           MaximumUid = 2000;
-          HideUsers = [
-            "nixbld"
-            "sddm"
-          ];
+          HideUsers = "nixbld,sddm";
         };
       };
     };
