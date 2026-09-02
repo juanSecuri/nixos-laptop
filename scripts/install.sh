@@ -6,13 +6,12 @@ set -euo pipefail
 REPO="${1:-/root/nixos-laptop}"
 HOST="lenovo-v14"
 DISK="/dev/nvme0n1"
+EXTRAS="${REPO}/scripts/nix-anywhere-extras"
 
 red() { printf '\033[0;31m%s\033[0m\n' "$*"; }
 green() { printf '\033[0;32m%s\033[0m\n' "$*"; }
 bold() { printf '\033[1m%s\033[0m\n' "$*"; }
 
-# Live ISO may not enable flakes/nix-command by default.
-# require-sigs=false avoids signature errors when copying the closure (nixos-anywhere #616).
 export NIX_CONFIG="experimental-features = nix-command flakes
 require-sigs = false
 trusted-users = root
@@ -45,10 +44,9 @@ git clean -fd 2>/dev/null || true
 
 if ! grep -q 'doDoc = false' hosts/lenovo-v14/default.nix; then
   red "ERROR: Repo desactualizado. Sin conexión a GitHub?"
-  red "  git fetch origin && git reset --hard origin/main"
   exit 1
 fi
-green "    Config actualizada (doDoc=false, nixos-24.11)"
+green "    Config actualizada (nixos-24.11)"
 
 bold "==> Liberar espacio en live USB"
 swapoff /swapfile 2>/dev/null || true
@@ -71,13 +69,11 @@ fi
 grep -qF "$(cat /root/.ssh/id_ed25519.pub)" /root/.ssh/authorized_keys 2>/dev/null \
   || cat /root/.ssh/id_ed25519.pub >> /root/.ssh/authorized_keys
 chmod 600 /root/.ssh/authorized_keys
-
 systemctl start sshd 2>/dev/null || true
 
 if ! ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=5 \
   root@127.0.0.1 true 2>/dev/null; then
   red "ERROR: SSH a root@127.0.0.1 falló."
-  red "En ISO Minimal: passwd root && systemctl start sshd"
   exit 1
 fi
 green "    SSH localhost OK"
@@ -97,12 +93,13 @@ if [[ "${confirm}" != "YES" ]]; then
 fi
 
 bold "==> Instalando (45–90 min, Ethernet conectado)"
-bold "    Descarga de cache.nixos.org + install vía nixos-anywhere"
+bold "    Build en disco NVMe (--build-on remote), USB solo orquesta"
 nix run github:nix-community/nixos-anywhere -- \
   --flake ".#${HOST}" \
   --generate-hardware-config nixos-generate-config "./hosts/${HOST}/hardware-configuration.nix" \
   --target-host root@127.0.0.1 \
-  --build-on local \
+  --build-on remote \
+  --extra-files "${EXTRAS}" \
   --print-build-logs \
   --option require-sigs false \
   --option trusted-users root \
