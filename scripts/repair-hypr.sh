@@ -25,6 +25,12 @@ cp -a "$REPO_DIR/dotfiles/.config/waybar/." "$HOME/.config/waybar/"
 cp -a "$REPO_DIR/dotfiles/.config/rofi/." "$HOME/.config/rofi/"
 cp -a "$REPO_DIR/dotfiles/.config/kitty/." "$HOME/.config/kitty/"
 cp -a "$REPO_DIR/dotfiles/.config/dunst/." "$HOME/.config/dunst/"
+mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
+cp -f "$REPO_DIR/dotfiles/.config/gtk-3.0/settings.ini" "$HOME/.config/gtk-3.0/settings.ini" 2>/dev/null || true
+cp -f "$REPO_DIR/dotfiles/.config/gtk-4.0/settings.ini" "$HOME/.config/gtk-4.0/settings.ini" 2>/dev/null || true
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface icon-theme 'Papirus' 2>/dev/null || true
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
 mkdir -p "$HOME/.config/ml4w/settings"
 cp -f "$REPO_DIR/dotfiles/.config/ml4w/settings/"* "$HOME/.config/ml4w/settings/" 2>/dev/null || true
 

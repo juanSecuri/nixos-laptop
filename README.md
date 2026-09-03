@@ -35,6 +35,9 @@ Cierra sesión → entra en **Hyprland**.
 | Atajo | Acción |
 |-------|--------|
 | `SUPER + Return` | Terminal |
+| `SUPER + Q` / `SUPER + W` / `Alt + F4` | Cerrar ventana |
+| `SUPER + T` | Flotar / mosaico |
+| `SUPER + F` | Pantalla completa |
 | `SUPER + Ctrl + Return` | Apps (Rofi) |
 | `SUPER + E` | Archivos |
 | `SUPER + B` | Firefox |
