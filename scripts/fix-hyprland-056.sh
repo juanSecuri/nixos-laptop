@@ -9,6 +9,9 @@ echo "=== Parche Hyprland 0.56 (tema ML4W intacto) ==="
 
 cp -f "$REPO_DIR/dotfiles/.config/hypr/conf/layouts.conf" "$CONF/layouts.conf"
 cp -f "$REPO_DIR/dotfiles/.config/hypr/conf/gestures.conf" "$CONF/gestures.conf"
+cp -f "$REPO_DIR/dotfiles/.config/hypr/conf/windowrules.conf" "$CONF/windowrules.conf"
+cp -f "$REPO_DIR/dotfiles/.config/hypr/conf/animations.conf" "$CONF/animations.conf"
+cp -f "$REPO_DIR/dotfiles/.config/hypr/conf/binds.conf" "$CONF/binds.conf"
 cp -f "$REPO_DIR/dotfiles/.config/hypr/conf/faith.conf" "$CONF/faith.conf"
 
 # Tema ML4W completo (waybar, rofi, kitty, hypr colores)

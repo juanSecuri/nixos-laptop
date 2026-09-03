@@ -16,12 +16,15 @@ rm -rf \
   "$HOME/.config/hypr" \
   "$HOME/.config/waybar" \
   "$HOME/.config/rofi" \
+  "$HOME/.config/kitty" \
   "$HOME/.config/swaync" \
   "$HOME/.config/wlogout" \
   "$HOME/.config/quickshell" \
   "$HOME/.config/ags" \
   "$HOME/.config/cava" \
   "$HOME/.config/wallust" \
+  "$HOME/.config/Kvantum" \
+  "$HOME/Fedora-Hyprland" \
   2>/dev/null || true
 
 # Quitar pokemon / temas raros de zsh
