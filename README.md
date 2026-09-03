@@ -1,92 +1,61 @@
-# nixos-laptop
+# fedora-hyprland-laptop
 
-Configuración declarativa de NixOS para **jloaiza10** — Lenovo V14 G4 ABP (Ryzen 7 7730U, 22 GB RAM).
+Configuración profesional **Fedora + Hyprland** para Lenovo V14 G4 ABP (jloaiza10).
 
 | | |
 |---|---|
-| **Escritorio** | Hyprland · Quickshell · LY · Matugen · awww · Alacritty |
-| **Desarrollo** | Python 3.11 · Node 22 · Java 21 · Docker · Supabase · Azure · gh |
-| **Fe / audio** | Mixlr (La Palabra del Señor) · Biblia YouVersion · Firefox · mpv |
-| **Instalación** | USB Minimal ISO → `bash scripts/install.sh` |
-| **Flake** | `#lenovo-v14` |
+| **Base** | Fedora 41/42 |
+| **Escritorio** | Hyprland · Waybar · Rofi · SDDM · Kitty |
+| **Instalador** | [JaKooLit/Fedora-Hyprland](https://github.com/JaKooLit/Fedora-Hyprland) |
+| **Dotfiles** | Overrides modulares (estilo [ML4W](https://github.com/mylinuxforwork/hyprland-starter)) |
+| **Dev** | Cursor, VS Code, Docker, Python, Node, Java, Wireshark, Packet Tracer |
+| **Fe** | Mixlr · Biblia YouVersion |
+
+> **Nota:** Este repo antes era NixOS. Ahora es setup Fedora. Más estable, sin flakes ni rebuilds.
 
 ## Instalación rápida
 
-Guía completa: [docs/INSTALL.md](docs/INSTALL.md)
-
 ```bash
-git clone https://github.com/juanSecuri/nixos-laptop.git /root/nixos-laptop
-bash /root/nixos-laptop/scripts/install.sh
+git clone https://github.com/juanSecuri/nixos-laptop.git ~/fedora-setup
+cd ~/fedora-setup
+chmod +x install.sh scripts/*.sh
+./install.sh
+sudo reboot
 ```
+
+Guía completa: [docs/INSTALL.md](docs/INSTALL.md)
 
 ## Estructura
 
 ```
-flake.nix
-hosts/lenovo-v14/       # Host, disko, hardware-config
-modules/
-  core/                 # Hyprland, LY, paquetes, fuentes, portales
-  home/                 # Quickshell, Hypr Lua, Alacritty, fe/Mixlr, Neovim
-  hardware/             # AMD laptop, PipeWire, kernel
-  boot/                 # systemd-boot, Plymouth
-  dev/                  # Python, Node, Java, Docker, DB, CLI
-  system/               # Red, locale, SSH
-scripts/                # install.sh, preflight.sh
-docs/                   # INSTALL, POST-INSTALL, TROUBLESHOOTING
+install.sh              # Orquestador principal
+preset.sh               # Preset profesional para JaKooLit (sin pokemon/AGS)
+scripts/
+  apply-dotfiles.sh     # Overrides sobrios
+  dev-tools.sh          # Herramientas de desarrollo
+  faith.sh              # Mixlr + Biblia
+  cursor.sh             # Cursor IDE
+dotfiles/hypr/UserConfigs/  # Decoraciones, keybinds, env
+assets/wallpapers/      # Wallpaper
+docs/                   # Guías
 ```
 
-Hardware: [docs/hardware/lenovo-v14.md](docs/hardware/lenovo-v14.md)
-
-## Uso diario
-
-```bash
-rebuild    # sudo nixos-rebuild switch --flake ~/nixos-laptop#lenovo-v14
-update     # nix flake update && rebuild
-rollback   # revertir última generación
-```
+## Atajos
 
 | Atajo | Acción |
 |-------|--------|
-| `Super + T` | Terminal (Alacritty) |
-| `Super + SUPER_L` | Launcher (Quickshell) |
-| `Super + P` | Menú de apagado |
-| `Super + E` | Archivos (Thunar) |
-| `Super + W` | Navegador (Librewolf) |
-| `Super + Shift + C` | Cursor IDE |
-| `Super + Shift + B` | La Palabra del Señor (Mixlr) |
+| `SUPER + H` | Ayuda Hyprland |
+| `SUPER + Shift + C` | Cursor |
+| `SUPER + Shift + B` | La Palabra del Señor (Mixlr) |
+| `SUPER + Shift + Y` | Biblia |
+| `SUPER + Shift + P` | ~/Projects |
 
-## Herramientas de desarrollo (system-wide)
+## Hardware
 
-Incluidas vía `modules/dev/` — Python 3.11, uv, ruff, Node 22, pnpm, Java 21, Docker, PostgreSQL 16, Supabase CLI, Azure CLI, gh, chromedriver, tesseract, y más.
+[docs/HARDWARE.md](docs/HARDWARE.md)
 
-```bash
-projects          # cd ~/Projects
-nix develop .#python
-nix develop .#node
-nix develop .#profit-catalyst
-```
+## Referencias
 
-Cursor (AppImage): ver [docs/POST-INSTALL.md](docs/POST-INSTALL.md).
-
-## Dev shells
-
-```bash
-nix develop .#python
-nix develop .#node
-nix develop .#profit-catalyst
-```
-
-## Disco
-
-| Partición | Tamaño | Montaje |
-|-----------|--------|---------|
-| ESP | 512 MiB | `/boot` |
-| swap | 16 GiB | — |
-| btrfs | resto | `/`, `/home`, `/nix`, `/var/log` |
-
-## Antes de instalar
-
-1. Backup de `/home/jloaiza10`
-2. Secure Boot desactivado
-3. Ethernet conectado
-4. Opcional: clave SSH en `hosts/lenovo-v14/default.nix`
+- https://github.com/JaKooLit/Fedora-Hyprland
+- https://github.com/mylinuxforwork/hyprland-starter
+- https://github.com/JaKooLit/Hyprland-Dots

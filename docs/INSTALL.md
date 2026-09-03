@@ -1,94 +1,86 @@
-# NixOS Laptop — Guía de instalación
+# Instalación — Fedora + Hyprland profesional
 
-Instalación completa para **Lenovo V14 G4 ABP** con Hyprland, stack de desarrollo y acceso a Mixlr / Biblia.
+Setup para **Lenovo V14** basado en:
 
----
+- [JaKooLit/Fedora-Hyprland](https://github.com/JaKooLit/Fedora-Hyprland) — instalador Hyprland
+- [mylinuxforwork/hyprland-starter](https://github.com/mylinuxforwork/hyprland-starter) — patrones modulares
 
-## Antes de empezar
+## Requisitos
 
-1. **Backup** de `/home/jloaiza10` — se borra todo el disco.
-2. **Secure Boot → Disabled** en BIOS (F2).
-3. **Ethernet** conectado durante la instalación.
-4. USB ≥ 8 GB.
+1. **Fedora 41+** instalado (Workstation, KDE spin, o minimal)
+2. Usuario normal con `sudo`
+3. Internet estable
+4. Actualizar antes: `sudo dnf upgrade -y && sudo reboot`
 
----
-
-## Paso 1 — Crear USB en Windows
-
-1. Descarga la **Minimal ISO** (recomendada, una sola opción de arranque):
-   - https://nixos.org/download.html
-   - O directo: https://channels.nixos.org/nixos-unstable/latest-nixos-minimal-x86_64-linux.iso
-
-2. Abre **Rufus**:
-   - Dispositivo → tu USB
-   - ISO → el archivo descargado
-   - GPT + UEFI
-   - START → DD Image mode si pregunta
-
-> La **Graphical ISO** muestra 4 entradas (GNOME/Plasma) — es normal, solo elige cualquiera. La Minimal evita esa confusión.
-
----
-
-## Paso 2 — BIOS y arranque
-
-1. Apaga la laptop, mete la USB, conecta Ethernet.
-2. Enciende → **F12** → elige el USB.
-3. En Minimal ISO: login `root` (sin contraseña, o `passwd root` si pide).
-
----
-
-## Paso 3 — Instalar (un comando)
+## Instalación en 1 comando
 
 ```bash
-passwd root
-systemctl start sshd
-
-git clone https://github.com/juanSecuri/nixos-laptop.git /root/nixos-laptop
-bash /root/nixos-laptop/scripts/install.sh
+git clone https://github.com/juanSecuri/nixos-laptop.git ~/fedora-setup
+cd ~/fedora-setup
+chmod +x install.sh scripts/*.sh
+./install.sh
+sudo reboot
 ```
 
-Escribe **`YES`** cuando lo pida.
+## Qué instala
 
-**Espera 45–90 minutos.** No apagues. Ethernet conectado.
+### Escritorio (JaKooLit)
+- Hyprland, Waybar, Rofi, Kitty, SDDM
+- Thunar, Bluetooth, portales Wayland
+- **Sin:** Pokemon terminal, AGS, Quickshell, tema SDDM flashy
 
----
+### Herramientas dev (`scripts/dev-tools.sh`)
+- Git, gh, Docker, Python, Node, Java 21
+- VS Code, Wireshark, LibreOffice, Firefox
+- uv, pnpm, Supabase CLI, Azure CLI
+- Cisco Packet Tracer (si tienes el `.deb` en `~/Downloads/`)
 
-## Paso 4 — Primer arranque
+### Fe (`scripts/faith.sh`)
+- `SUPER + Shift + B` → Mixlr (La Palabra del Señor)
+- `SUPER + Shift + Y` → Biblia YouVersion
 
-1. Saca el USB y reinicia.
-2. Login en **SDDM** → usuario `jloaiza10`, contraseña `NixOS2026!`.
-3. Sesión **Hyprland**.
-4. Cambia la contraseña: `passwd`
-
-```bash
-cat /etc/os-release   # debe decir NixOS
-```
-
----
-
-## Qué se instala
-
-| Área | Contenido |
-|------|-----------|
-| **Escritorio** | Hyprland, SDDM Catppuccin, Waybar, Rofi, Kitty |
-| **Desarrollo** | Python 3.11, Node 22, Java 21, Docker, Supabase CLI, Azure CLI |
-| **Fe / audio** | Mixlr (La Palabra del Señor), Biblia YouVersion, Firefox, mpv |
-| **Disco** | ESP 512M + swap 16G + btrfs (`/`, `/home`, `/nix`, `/var/log`) |
-
----
+### Cursor (`scripts/cursor.sh`)
+- `SUPER + Shift + C` → Cursor IDE
 
 ## Atajos Hyprland
 
 | Atajo | Acción |
 |-------|--------|
-| `Super + Return` | Terminal |
-| `Super + R` | Lanzador de apps |
-| `Super + E` | Archivos |
-| `Super + Shift + B` | La Palabra del Señor (Mixlr) |
-| `Super + Print` | Captura de pantalla |
+| `SUPER + H` | Ayuda / keybinds |
+| `SUPER + Return` | Terminal |
+| `SUPER + R` | Launcher |
+| `SUPER + E` | Archivos |
+| `SUPER + Shift + C` | Cursor |
+| `SUPER + Shift + B` | Mixlr |
+| `SUPER + Shift + P` | ~/Projects |
 
----
+## Personalizar
 
-## Problemas
+Edita archivos en `~/.config/hypr/UserConfigs/`:
 
-Ver [TROUBLESHOOTING.md](./TROUBLESHOOTING.md).
+```bash
+nano ~/.config/hypr/UserConfigs/UserDecorations.conf
+nano ~/.config/hypr/UserConfigs/UserKeybinds.conf
+hyprctl reload
+```
+
+## Packet Tracer
+
+1. Descarga el `.deb` desde [NetAcad](https://www.netacad.com/)
+2. Guárdalo en `~/Downloads/PacketTracer_*.deb`
+3. Vuelve a correr: `bash scripts/dev-tools.sh`
+
+## Problemas comunes
+
+| Problema | Solución |
+|----------|----------|
+| Hyprland no inicia | TTY → `Hyprland` (H mayúscula) |
+| Rofi pixelado | `sudo dnf swap rofi rofi-wayland` |
+| Docker permission | `sudo usermod -aG docker $USER` + logout |
+| Waybar sin workspaces | Fedora 40+ requerido |
+
+## Desinstalar Hyprland
+
+```bash
+cd ~/Fedora-Hyprland && ./uninstall.sh
+```

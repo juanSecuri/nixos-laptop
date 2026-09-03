@@ -1,21 +1,18 @@
-result
-.direnv
-.env
-*.swp
-*.swo
-*~
-.DS_Store
-
-# Install logs
-nixos-install.log
+Install-Logs/
 *.log
+.DS_Store
+*~
 
-# agenix secrets (never commit decrypted)
-secrets/*.age
-!secrets/*.age.example
+# Cursor AppImage cache (downloaded by scripts/cursor.sh)
+.local/
 
-# Cursor AppImage download cache
-.home-manager/cursor/
+# Fedora-Hyprland clone (created by install.sh in $HOME)
+# Not in this repo — lives at ~/Fedora-Hyprland
 
-# Local reference clone (ashvr0/NixOS-Config)
+# Packet Tracer installers
+*.deb
+*.rpm
+
+# Temp clones
+fedora-hyprland-temp/
 .ashvr0-ref/
