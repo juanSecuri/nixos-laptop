@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
 
 CURSOR_DIR="$HOME/.local/share/cursor"
 CURSOR_BIN="$CURSOR_DIR/cursor.AppImage"
@@ -8,7 +8,10 @@ mkdir -p "$CURSOR_DIR" "$HOME/.local/bin"
 
 if [[ ! -f "$CURSOR_BIN" ]]; then
   echo "Descargando Cursor AppImage..."
-  curl -L "https://downloader.cursor.sh/linux/appImage/x64" -o "$CURSOR_BIN"
+  if ! curl -fL "https://downloader.cursor.sh/linux/appImage/x64" -o "$CURSOR_BIN"; then
+    echo "AVISO: descarga de Cursor falló (red o URL). Reintenta: bash scripts/cursor.sh"
+    exit 0
+  fi
   chmod +x "$CURSOR_BIN"
 fi
 
@@ -18,6 +21,7 @@ exec "$CURSOR_BIN" --no-sandbox "\$@"
 EOF
 chmod +x "$HOME/.local/bin/cursor"
 
+mkdir -p "$HOME/.local/share/applications"
 cat > "$HOME/.local/share/applications/cursor.desktop" << EOF
 [Desktop Entry]
 Name=Cursor

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Wallpaper + terminal + carpetas — funciona SIN git pull
-set -euo pipefail
+set -uo pipefail
 
 REPO_DIR="${REPO_DIR:-$HOME/fedora-setup}"
 WALL_DIR="$HOME/.config/ml4w/wallpapers"
@@ -19,11 +19,15 @@ if ! fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd Font"; then
   echo "Instalando JetBrainsMono Nerd Font..."
   mkdir -p "$FONT_DIR"
   tmpzip="$(mktemp /tmp/jetbrains-nerd.XXXXXX.zip)"
-  curl -fsSL -o "$tmpzip" \
-    "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip"
-  unzip -qo "$tmpzip" -d "$FONT_DIR"
-  rm -f "$tmpzip"
-  fc-cache -fv "$HOME/.local/share/fonts" 2>/dev/null || true
+  if curl -fsSL -o "$tmpzip" \
+    "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip"; then
+    unzip -qo "$tmpzip" -d "$FONT_DIR" 2>/dev/null || echo "AVISO: unzip de fuente falló"
+    rm -f "$tmpzip"
+    fc-cache -fv "$HOME/.local/share/fonts" 2>/dev/null || true
+  else
+    echo "AVISO: descarga de Nerd Font falló (continuando sin ella)"
+    rm -f "$tmpzip"
+  fi
 fi
 
 # Wallpaper
@@ -33,11 +37,17 @@ if [[ -f "$REPO_DIR/assets/wallpapers/ml4w-default.jpg" ]]; then
 elif [[ -s "$WALL_FILE" ]]; then
   echo "Usando wallpaper existente."
 else
-  curl -fsSL -o "$WALL_FILE" \
-    "https://raw.githubusercontent.com/mylinuxforwork/hyprland-starter/main/dotfiles/.config/ml4w/wallpapers/wallpaper.jpg"
+  if ! curl -fsSL -o "$WALL_FILE" \
+    "https://raw.githubusercontent.com/mylinuxforwork/hyprland-starter/main/dotfiles/.config/ml4w/wallpapers/wallpaper.jpg"; then
+    echo "AVISO: descarga de wallpaper falló"
+  fi
 fi
-cp -f "$WALL_FILE" "$HOME/Pictures/wallpaper.jpg"
-echo "Wallpaper: $WALL_FILE"
+if [[ -s "$WALL_FILE" ]]; then
+  cp -f "$WALL_FILE" "$HOME/Pictures/wallpaper.jpg"
+  echo "Wallpaper: $WALL_FILE"
+else
+  echo "AVISO: sin wallpaper — copia una imagen a $WALL_FILE"
+fi
 
 # Monitor real
 if command -v hyprctl &>/dev/null && [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
@@ -48,7 +58,8 @@ echo "Monitor: $MONITOR"
 
 # hyprpaper 0.8+
 mkdir -p "$HOME/.config/hypr"
-cat > "$HOME/.config/hypr/hyprpaper.conf" << EOF
+if [[ -s "$WALL_FILE" ]]; then
+  cat > "$HOME/.config/hypr/hyprpaper.conf" << EOF
 splash = false
 
 wallpaper {
@@ -63,6 +74,7 @@ wallpaper {
     fit_mode = cover
 }
 EOF
+fi
 
 # GTK Papirus (carpetas azules)
 mkdir -p "$HOME/.config/gtk-3.0" "$HOME/.config/gtk-4.0"
@@ -108,7 +120,7 @@ systemctl --user enable --now hyprpaper.service 2>/dev/null || {
 }
 
 sleep 2
-if command -v hyprctl &>/dev/null && [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+if command -v hyprctl &>/dev/null && [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]] && [[ -s "$WALL_FILE" ]]; then
   hyprctl hyprpaper wallpaper "${MONITOR},${WALL_FILE},cover" 2>/dev/null || true
 fi
 

@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
-set -euo pipefail
+# Herramientas de desarrollo para Fedora — pasos opcionales, no aborta en fallos.
+set -uo pipefail
+
+log()  { echo "[$(date +%H:%M:%S)] $*"; }
+warn() { log "⚠ $*"; }
 
 echo "=== Herramientas de desarrollo ==="
 
-# Repos oficiales
+# Paquetes base (Fedora repos)
+log "Instalando paquetes dnf..."
 sudo dnf install -y \
   git gh git-lfs \
-  docker docker-compose \
   python3 python3-pip python3-virtualenv \
   nodejs npm \
   java-21-openjdk java-21-openjdk-devel maven \
@@ -15,58 +19,85 @@ sudo dnf install -y \
   libreoffice \
   firefox \
   vim nano \
-  jq ripgrep fd-find bat eza fzf tmux htop \
+  jq ripgrep fd-find bat fzf tmux htop \
   tesseract poppler-utils \
-  2>/dev/null || true
+  2>/dev/null || warn "algunos paquetes dnf no se instalaron"
+
+# eza: nombre en Fedora puede variar
+if ! command -v eza >/dev/null 2>&1; then
+  sudo dnf install -y eza 2>/dev/null || \
+    sudo dnf install -y eza-cli 2>/dev/null || \
+    warn "eza no disponible en repos — opcional"
+fi
+
+# Docker en Fedora = moby-engine (no existe paquete 'docker')
+log "Docker (moby-engine)..."
+if ! command -v docker >/dev/null 2>&1; then
+  sudo dnf install -y moby-engine docker-compose moby-cli 2>/dev/null || \
+    warn "moby-engine no instalado — prueba: sudo dnf install moby-engine docker-compose"
+fi
+if command -v docker >/dev/null 2>&1 || systemctl list-unit-files docker.service &>/dev/null; then
+  sudo systemctl enable --now docker 2>/dev/null || true
+  sudo usermod -aG docker "$USER" 2>/dev/null || true
+else
+  warn "Docker daemon no disponible — revisa: sudo dnf install moby-engine"
+fi
 
 # VS Code (Microsoft repo)
 if ! command -v code >/dev/null 2>&1; then
-  sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-  sudo sh -c 'cat > /etc/yum.repos.d/vscode.repo << EOF
+  log "VS Code..."
+  sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc 2>/dev/null || true
+  if [[ ! -f /etc/yum.repos.d/vscode.repo ]]; then
+    sudo tee /etc/yum.repos.d/vscode.repo >/dev/null << 'EOF'
 [code]
 name=Visual Studio Code
 baseurl=https://packages.microsoft.com/yumrepos/vscode
 enabled=1
 gpgcheck=1
 gpgkey=https://packages.microsoft.com/keys/microsoft.asc
-EOF'
-  sudo dnf install -y code
+EOF
+  fi
+  sudo dnf install -y code 2>/dev/null || warn "VS Code no instalado"
 fi
 
-# Docker group
-sudo systemctl enable --now docker
-sudo usermod -aG docker "$USER" 2>/dev/null || true
-
-# Azure CLI
+# Azure CLI (opcional)
 if ! command -v az >/dev/null 2>&1; then
   sudo dnf install -y azure-cli 2>/dev/null || \
-    echo "Azure CLI: sudo dnf install azure-cli (o ver docs.microsoft.com)"
+    warn "Azure CLI: sudo dnf install azure-cli (o ver docs.microsoft.com)"
 fi
 
 # Supabase CLI via npm
 if command -v npm >/dev/null 2>&1; then
-  sudo npm install -g supabase 2>/dev/null || npm install -g supabase 2>/dev/null || true
+  npm install -g supabase 2>/dev/null || \
+    sudo npm install -g supabase 2>/dev/null || \
+    warn "supabase CLI no instalado"
 fi
 
 # uv (Python)
 if ! command -v uv >/dev/null 2>&1; then
-  curl -LsSf https://astral.sh/uv/install.sh | sh
+  curl -LsSf https://astral.sh/uv/install.sh | sh 2>/dev/null || warn "uv no instalado"
 fi
 
 # pnpm
 if command -v corepack >/dev/null 2>&1; then
-  sudo corepack enable
+  sudo corepack enable 2>/dev/null || true
   corepack prepare pnpm@latest --activate 2>/dev/null || true
 fi
 
 # Cisco Packet Tracer — requiere .deb descargado de NetAcad
-PACKET_TRACER_DEB="$HOME/Downloads/PacketTracer*.deb"
-if compgen -G "$PACKET_TRACER_DEB" >/dev/null; then
-  DEB_FILE=$(ls -1 $HOME/Downloads/PacketTracer*.deb | head -1)
-  echo "Instalando Packet Tracer desde $DEB_FILE"
+shopt -s nullglob
+DEB_FILES=("$HOME/Downloads"/PacketTracer*.deb)
+shopt -u nullglob
+if ((${#DEB_FILES[@]})); then
+  DEB_FILE="${DEB_FILES[0]}"
+  log "Packet Tracer desde $DEB_FILE"
   sudo dnf install -y alien libicu 2>/dev/null || true
-  sudo alien -r "$DEB_FILE"
-  sudo rpm -i packettracer*.rpm 2>/dev/null || echo "Packet Tracer: revisa dependencias manualmente"
+  if sudo alien -r "$DEB_FILE" 2>/dev/null; then
+    sudo rpm -i packettracer*.rpm 2>/dev/null || warn "Packet Tracer: revisa dependencias manualmente"
+    rm -f packettracer*.rpm 2>/dev/null || true
+  else
+    warn "alien falló al convertir Packet Tracer"
+  fi
 else
   echo "Packet Tracer: descarga el .deb desde NetAcad a ~/Downloads/ y vuelve a correr este script"
 fi
@@ -79,4 +110,5 @@ cd ~/Projects 2>/dev/null || mkdir -p ~/Projects && cd ~/Projects
 EOF
 chmod +x "$HOME/.local/bin/projects"
 
-echo "Dev tools instalados. Cierra sesión para grupo docker."
+echo ""
+echo "Dev tools listos. Cierra sesión para grupo docker (si aplica)."

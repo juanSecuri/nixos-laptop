@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
 
 MIXLR_URL="https://ayudador.mixlr.com/"
 BIBLE_URL="https://www.bible.com/es"
