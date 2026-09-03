@@ -1,19 +1,15 @@
 # fedora-hyprland-laptop
 
-Configuración profesional **Fedora + Hyprland** para Lenovo V14 G4 ABP (jloaiza10).
+Setup **Fedora + Hyprland** profesional para Lenovo V14 — dev, sobrio, para el Señor.
 
 | | |
 |---|---|
-| **Base** | Fedora 41/42 |
-| **Escritorio** | Hyprland · Waybar · Rofi · SDDM · Kitty |
-| **Instalador** | [JaKooLit/Fedora-Hyprland](https://github.com/JaKooLit/Fedora-Hyprland) |
-| **Dotfiles** | Overrides modulares (estilo [ML4W](https://github.com/mylinuxforwork/hyprland-starter)) |
-| **Dev** | Cursor, VS Code, Docker, Python, Node, Java, Wireshark, Packet Tracer |
-| **Fe** | Mixlr · Biblia YouVersion |
+| **Base** | Fedora 41/42/44 |
+| **Dotfiles** | [ML4W hyprland-starter](https://github.com/mylinuxforwork/hyprland-starter) |
+| **Sin** | JaKooLit, pokemon, anime, quickshell, matrix |
+| **Con** | Wallpaper león, Mixlr, Biblia, Cursor, dev tools |
 
-> **Nota:** Este repo antes era NixOS. Ahora es setup Fedora. Más estable, sin flakes ni rebuilds.
-
-## Instalación rápida
+## Instalación nueva (Fedora recién instalado)
 
 ```bash
 git clone https://github.com/juanSecuri/nixos-laptop.git ~/fedora-setup
@@ -23,39 +19,41 @@ chmod +x install.sh scripts/*.sh
 sudo reboot
 ```
 
-Guía completa: [docs/INSTALL.md](docs/INSTALL.md)
+## Ya tienes JaKooLit — cambiar a ML4W
 
-## Estructura
+```bash
+cd ~/fedora-setup
+git pull
+chmod +x scripts/*.sh
+bash scripts/switch-to-ml4w.sh
+```
 
-```
-install.sh              # Orquestador principal
-preset.sh               # Preset profesional para JaKooLit (sin pokemon/AGS)
-scripts/
-  apply-dotfiles.sh     # Overrides sobrios
-  dev-tools.sh          # Herramientas de desarrollo
-  faith.sh              # Mixlr + Biblia
-  cursor.sh             # Cursor IDE
-dotfiles/hypr/UserConfigs/  # Decoraciones, keybinds, env
-assets/wallpapers/      # Wallpaper
-docs/                   # Guías
-```
+Cierra sesión → entra en **Hyprland**.
 
 ## Atajos
 
 | Atajo | Acción |
 |-------|--------|
-| `SUPER + H` | Ayuda Hyprland |
+| `SUPER + Return` | Terminal |
+| `SUPER + Ctrl + Return` | Apps (Rofi) |
+| `SUPER + E` | Archivos |
+| `SUPER + B` | Firefox |
 | `SUPER + Shift + C` | Cursor |
-| `SUPER + Shift + B` | La Palabra del Señor (Mixlr) |
+| `SUPER + Shift + B` | Mixlr — La Palabra del Señor |
 | `SUPER + Shift + Y` | Biblia |
 | `SUPER + Shift + P` | ~/Projects |
 
-## Hardware
+## Editar config
 
-[docs/HARDWARE.md](docs/HARDWARE.md)
+```bash
+nano ~/.config/hypr/conf/binds.conf
+nano ~/.config/hypr/conf/general.conf
+hyprctl reload
+```
+
+Wallpaper: reemplaza `~/.config/ml4w/wallpapers/wallpaper.jpg` y reinicia `hyprpaper`.
 
 ## Referencias
 
-- https://github.com/JaKooLit/Fedora-Hyprland
 - https://github.com/mylinuxforwork/hyprland-starter
-- https://github.com/JaKooLit/Hyprland-Dots
+- [docs/INSTALL.md](docs/INSTALL.md)

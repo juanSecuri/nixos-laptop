@@ -38,16 +38,4 @@ Type=Application
 Categories=Education;Network;
 EOF
 
-# Keybind en Hyprland UserConfigs (JaKooLit merge)
-KEYBINDS="$HOME/.config/hypr/UserConfigs/UserKeybinds.conf"
-mkdir -p "$(dirname "$KEYBINDS")"
-if ! grep -q "la-palabra-del-senor" "$KEYBINDS" 2>/dev/null; then
-  cat >> "$KEYBINDS" << 'EOF'
-
-# Fe — La Palabra del Señor
-bind = $mainMod SHIFT, B, exec, la-palabra-del-senor
-bind = $mainMod SHIFT, Y, exec, biblia
-EOF
-fi
-
-echo "Mixlr y Biblia configurados: SUPER+Shift+B / SUPER+Shift+Y"
+echo "Mixlr: SUPER+Shift+B | Biblia: SUPER+Shift+Y"

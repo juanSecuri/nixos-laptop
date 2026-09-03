@@ -1,18 +1,6 @@
-# Instalación — Fedora + Hyprland profesional
+# Instalación — ML4W Hyprland
 
-Setup para **Lenovo V14** basado en:
-
-- [JaKooLit/Fedora-Hyprland](https://github.com/JaKooLit/Fedora-Hyprland) — instalador Hyprland
-- [mylinuxforwork/hyprland-starter](https://github.com/mylinuxforwork/hyprland-starter) — patrones modulares
-
-## Requisitos
-
-1. **Fedora 41+** instalado (Workstation, KDE spin, o minimal)
-2. Usuario normal con `sudo`
-3. Internet estable
-4. Actualizar antes: `sudo dnf upgrade -y && sudo reboot`
-
-## Instalación en 1 comando
+## Instalación nueva
 
 ```bash
 git clone https://github.com/juanSecuri/nixos-laptop.git ~/fedora-setup
@@ -22,65 +10,34 @@ chmod +x install.sh scripts/*.sh
 sudo reboot
 ```
 
-## Qué instala
+Login → sesión **Hyprland**.
 
-### Escritorio (JaKooLit)
-- Hyprland, Waybar, Rofi, Kitty, SDDM
-- Thunar, Bluetooth, portales Wayland
-- **Sin:** Pokemon terminal, AGS, Quickshell, tema SDDM flashy
-
-### Herramientas dev (`scripts/dev-tools.sh`)
-- Git, gh, Docker, Python, Node, Java 21
-- VS Code, Wireshark, LibreOffice, Firefox
-- uv, pnpm, Supabase CLI, Azure CLI
-- Cisco Packet Tracer (si tienes el `.deb` en `~/Downloads/`)
-
-### Fe (`scripts/faith.sh`)
-- `SUPER + Shift + B` → Mixlr (La Palabra del Señor)
-- `SUPER + Shift + Y` → Biblia YouVersion
-
-### Cursor (`scripts/cursor.sh`)
-- `SUPER + Shift + C` → Cursor IDE
-
-## Atajos Hyprland
-
-| Atajo | Acción |
-|-------|--------|
-| `SUPER + H` | Ayuda / keybinds |
-| `SUPER + Return` | Terminal |
-| `SUPER + R` | Launcher |
-| `SUPER + E` | Archivos |
-| `SUPER + Shift + C` | Cursor |
-| `SUPER + Shift + B` | Mixlr |
-| `SUPER + Shift + P` | ~/Projects |
-
-## Personalizar
-
-Edita archivos en `~/.config/hypr/UserConfigs/`:
+## Migrar desde JaKooLit (tu caso)
 
 ```bash
-nano ~/.config/hypr/UserConfigs/UserDecorations.conf
-nano ~/.config/hypr/UserConfigs/UserKeybinds.conf
-hyprctl reload
+cd ~/fedora-setup
+git pull
+bash scripts/switch-to-ml4w.sh
 ```
 
-## Packet Tracer
+Esto:
+1. Borra config JaKooLit (pokemon, quickshell, errores rojos)
+2. Instala [ML4W hyprland-starter](https://github.com/mylinuxforwork/hyprland-starter)
+3. Aplica wallpaper del león + keybinds de fe
+4. Configura Cursor y Mixlr
 
-1. Descarga el `.deb` desde [NetAcad](https://www.netacad.com/)
-2. Guárdalo en `~/Downloads/PacketTracer_*.deb`
-3. Vuelve a correr: `bash scripts/dev-tools.sh`
-
-## Problemas comunes
-
-| Problema | Solución |
-|----------|----------|
-| Hyprland no inicia | TTY → `Hyprland` (H mayúscula) |
-| Rofi pixelado | `sudo dnf swap rofi rofi-wayland` |
-| Docker permission | `sudo usermod -aG docker $USER` + logout |
-| Waybar sin workspaces | Fedora 40+ requerido |
-
-## Desinstalar Hyprland
+## Pendiente después
 
 ```bash
-cd ~/Fedora-Hyprland && ./uninstall.sh
+bash ~/fedora-setup/scripts/cursor.sh      # Cursor IDE
+bash ~/fedora-setup/scripts/dev-tools.sh   # Docker, Packet Tracer, etc.
 ```
+
+Packet Tracer: descarga `.deb` de NetAcad → `~/Downloads/` → `dev-tools.sh`
+
+## Sin pokemon / sin anime
+
+- fastfetch sin logo
+- zsh tema `robbyrussell` (no pokemon)
+- wallpaper: león (`assets/wallpapers/wallpaper.jpg`)
+- colores sobrios gris/azul
