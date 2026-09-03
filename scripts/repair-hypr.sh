@@ -17,7 +17,6 @@ rm -f "$HYPR/hyprland.lua" "$HYPR/hyprland.conf.bak" 2>/dev/null || true
 # Config hypr 100% desde nuestro repo (sin basura ML4W/JaKooLit)
 mkdir -p "$HYPR/conf"
 cp -f "$REPO_DIR/dotfiles/.config/hypr/hyprland.conf" "$HYPR/hyprland.conf"
-cp -f "$REPO_DIR/dotfiles/.config/hypr/hyprpaper.conf" "$HYPR/hyprpaper.conf"
 cp -f "$REPO_DIR/dotfiles/.config/hypr/conf/"*.conf "$HYPR/conf/"
 
 # Tema ML4W
@@ -43,15 +42,6 @@ fi
 chmod +x "$HOME/.config/ml4w/settings/"*.sh 2>/dev/null || true
 
 bash "$REPO_DIR/scripts/ml4w-look.sh"
-
-# Validar antes de recargar (solo si ya estás en Hyprland)
-if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]] && command -v hyprctl &>/dev/null; then
-  hyprctl reload 2>&1 || true
-  pkill hyprpaper 2>/dev/null || true
-  sleep 1
-  hyprpaper & 2>/dev/null || true
-  pkill -SIGUSR2 waybar 2>/dev/null || true
-fi
 
 echo ""
 echo "=== Reparado ==="
