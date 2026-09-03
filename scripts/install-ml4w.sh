@@ -49,6 +49,9 @@ fi
 chmod +x "$HOME/.config/ml4w/settings/"*.sh 2>/dev/null || true
 chmod +x "$HOME/.config/ml4w/scripts/"*.sh 2>/dev/null || true
 
+# Parche Hyprland 0.56 (sin errores rojos)
+bash "$REPO_DIR/scripts/fix-hyprland-056.sh"
+
 # Bash profile limpio (sin pokemon)
 if [[ ! -f "$HOME/.bashrc" ]] || ! grep -q "fedora-setup" "$HOME/.bashrc" 2>/dev/null; then
   cat >> "$HOME/.bashrc" << 'EOF'

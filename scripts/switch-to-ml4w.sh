@@ -10,6 +10,7 @@ sleep 3
 bash "$REPO_DIR/scripts/remove-jakoolit.sh"
 bash "$REPO_DIR/scripts/install-ml4w.sh"
 bash "$REPO_DIR/scripts/faith.sh"
+bash "$REPO_DIR/scripts/fix-hyprland-056.sh"
 bash "$REPO_DIR/scripts/cursor.sh" 2>/dev/null || true
 
 echo ""
