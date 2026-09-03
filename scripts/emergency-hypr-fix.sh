@@ -17,6 +17,7 @@ chmod +x scripts/*.sh
 rm -f "${HOME}/.config/hypr/hyprland.lua" 2>/dev/null || true
 
 bash scripts/repair-hypr.sh
+bash scripts/ml4w-look.sh
 
 echo ""
 echo "LISTO. Ahora:"

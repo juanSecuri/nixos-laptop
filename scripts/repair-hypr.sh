@@ -42,15 +42,7 @@ if [[ -d "$HOME/hyprland-starter/dotfiles/.config/ml4w/scripts" ]]; then
 fi
 chmod +x "$HOME/.config/ml4w/settings/"*.sh 2>/dev/null || true
 
-# Wallpaper
-mkdir -p "$HOME/.config/ml4w/wallpapers" "$HOME/Pictures"
-WALL="$REPO_DIR/assets/wallpapers/ml4w-default.jpg"
-[[ -f "$HOME/hyprland-starter/dotfiles/.config/ml4w/wallpapers/wallpaper.jpg" ]] && \
-  WALL="$HOME/hyprland-starter/dotfiles/.config/ml4w/wallpapers/wallpaper.jpg"
-if [[ -f "$WALL" ]]; then
-  cp -f "$WALL" "$HOME/.config/ml4w/wallpapers/wallpaper.jpg"
-  cp -f "$WALL" "$HOME/Pictures/wallpaper.jpg"
-fi
+bash "$REPO_DIR/scripts/ml4w-look.sh"
 
 # Validar antes de recargar (solo si ya estás en Hyprland)
 if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]] && command -v hyprctl &>/dev/null; then
