@@ -72,6 +72,7 @@ gtk-theme-name=Adwaita-dark
 gtk-icon-theme-name=Papirus
 gtk-font-name=Fira Sans 11
 gtk-application-prefer-dark-theme=1
+gtk-cursor-theme-name=Adwaita
 EOF
 cp "$HOME/.config/gtk-3.0/settings.ini" "$HOME/.config/gtk-4.0/settings.ini"
 gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark' 2>/dev/null || true
