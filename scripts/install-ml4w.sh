@@ -33,8 +33,11 @@ else
   git clone --depth=1 https://github.com/mylinuxforwork/hyprland-starter.git "$ML4W_DIR"
 fi
 
-# Dotfiles ML4W base + solo faith (tema oficial ML4W)
-cp -a "$ML4W_DIR/dotfiles/." "$HOME/"
+# Solo scripts ML4W (NO copiar hypr/waybar — vienen de nuestro repo, compatibles 0.56)
+mkdir -p "$HOME/.config/ml4w"
+cp -a "$ML4W_DIR/dotfiles/.config/ml4w/." "$HOME/.config/ml4w/"
+
+# Nuestros dotfiles: tema ML4W + hypr 0.56 + faith
 cp -a "$REPO_DIR/dotfiles/." "$HOME/"
 
 # Wallpaper ML4W (edificios azules como en la demo)
@@ -52,6 +55,7 @@ chmod +x "$HOME/.config/ml4w/scripts/"*.sh 2>/dev/null || true
 
 # Parche Hyprland 0.56 (sin errores rojos)
 bash "$REPO_DIR/scripts/fix-hyprland-056.sh"
+bash "$REPO_DIR/scripts/repair-hypr.sh"
 
 # Bash profile limpio (sin pokemon)
 if [[ ! -f "$HOME/.bashrc" ]] || ! grep -q "fedora-setup" "$HOME/.bashrc" 2>/dev/null; then
