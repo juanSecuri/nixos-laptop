@@ -1,0 +1,25 @@
+{
+    "group/quicklinks": {
+        "orientation": "horizontal",
+        "modules": [
+            "custom/quicklink_browser",
+            "custom/quicklink_filemanager",
+            "custom/quicklink_calculator"
+        ]
+    },
+    "custom/quicklink_browser": {
+        "format": "",
+        "on-click": "~/.config/ml4w/settings/browser.sh",
+        "tooltip": false
+    },
+    "custom/quicklink_filemanager": {
+        "format": "",
+        "on-click": "~/.config/ml4w/settings/filemanager.sh",
+        "tooltip": false
+    },
+    "custom/quicklink_calculator": {
+        "format": "",
+        "on-click": "qalculate-gtk",
+        "tooltip": false
+    }
+}

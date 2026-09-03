@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Instala ML4W Hyprland Starter + dotfiles personalizados (fe, león, dev)
+# Instala ML4W Hyprland Starter + faith/dev (tema oficial ML4W)
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -17,9 +17,10 @@ sudo dnf install -y \
   firefox fastfetch vim \
   fontawesome-6-free-fonts mozilla-fira-sans-fonts fira-code-fonts \
   wlogout grim slurp wl-clipboard cliphist \
-  brightnessctl playerctl pavucontrol \
-  network-manager-applet \
-  2>/dev/null || sudo dnf install -y hyprland waybar rofi-wayland kitty dunst thunar hyprpaper hyprlock firefox fastfetch wlogout grim slurp wl-clipboard brightnessctl
+  brightnessctl playerctl pavucontrol network-manager-applet \
+  papirus-icon-theme adwaita-icon-theme google-noto-sans-fonts \
+  jetbrains-mono-vf-fonts \
+  || true
 
 # COPR Hyprland si hace falta
 sudo dnf copr enable -y sdegler/hyprland 2>/dev/null || \
@@ -32,18 +33,18 @@ else
   git clone --depth=1 https://github.com/mylinuxforwork/hyprland-starter.git "$ML4W_DIR"
 fi
 
-# Copiar dotfiles base ML4W
+# Dotfiles ML4W base + solo faith (tema oficial ML4W)
 cp -a "$ML4W_DIR/dotfiles/." "$HOME/"
-
-# Aplicar nuestros overrides (fe, león, latam, colores sobrios)
 cp -a "$REPO_DIR/dotfiles/." "$HOME/"
 
-# Wallpaper del león
+# Wallpaper ML4W (edificios azules como en la demo)
 mkdir -p "$HOME/.config/ml4w/wallpapers" "$HOME/Pictures"
-if [[ -f "$REPO_DIR/assets/wallpapers/wallpaper.jpg" ]]; then
-  cp -f "$REPO_DIR/assets/wallpapers/wallpaper.jpg" "$HOME/.config/ml4w/wallpapers/wallpaper.jpg"
-  cp -f "$REPO_DIR/assets/wallpapers/wallpaper.jpg" "$HOME/Pictures/wallpaper.jpg"
+if [[ -d "$ML4W_DIR/dotfiles/.config/ml4w/wallpapers" ]]; then
+  cp -a "$ML4W_DIR/dotfiles/.config/ml4w/wallpapers/." "$HOME/.config/ml4w/wallpapers/"
+elif [[ -f "$REPO_DIR/assets/wallpapers/ml4w-default.jpg" ]]; then
+  cp -f "$REPO_DIR/assets/wallpapers/ml4w-default.jpg" "$HOME/.config/ml4w/wallpapers/wallpaper.jpg"
 fi
+cp -f "$HOME/.config/ml4w/wallpapers/wallpaper.jpg" "$HOME/Pictures/wallpaper.jpg" 2>/dev/null || true
 
 # Scripts ejecutables
 chmod +x "$HOME/.config/ml4w/settings/"*.sh 2>/dev/null || true

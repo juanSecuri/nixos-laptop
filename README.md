@@ -7,7 +7,7 @@ Setup **Fedora + Hyprland** profesional para Lenovo V14 — dev, sobrio, para el
 | **Base** | Fedora 41/42/44 |
 | **Dotfiles** | [ML4W hyprland-starter](https://github.com/mylinuxforwork/hyprland-starter) |
 | **Sin** | JaKooLit, pokemon, anime, quickshell, matrix |
-| **Con** | Wallpaper león, Mixlr, Biblia, Cursor, dev tools |
+| **Con** | Tema ML4W oficial, Mixlr, Biblia, Cursor, dev tools |
 
 ## Instalación nueva (Fedora recién instalado)
 

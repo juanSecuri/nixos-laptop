@@ -16,4 +16,4 @@ bash "$REPO_DIR/scripts/cursor.sh" 2>/dev/null || true
 echo ""
 echo "=== Hecho ==="
 echo "Cierra sesión y entra en Hyprland (o: hyprctl reload)"
-echo "Wallpaper león + sin pokemon + sin errores rojos"
+echo "Tema ML4W oficial: waybar blanca, bordes cyan/verde, wallpaper edificios"

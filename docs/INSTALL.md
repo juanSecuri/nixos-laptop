@@ -23,7 +23,7 @@ bash scripts/switch-to-ml4w.sh
 Esto:
 1. Borra config JaKooLit (pokemon, quickshell, errores rojos)
 2. Instala [ML4W hyprland-starter](https://github.com/mylinuxforwork/hyprland-starter)
-3. Aplica wallpaper del león + keybinds de fe
+3. Aplica tema ML4W oficial (waybar blanca, colores cyan/verde, wallpaper edificios) + keybinds de fe
 4. Configura Cursor y Mixlr
 
 ## Pendiente después
@@ -39,5 +39,5 @@ Packet Tracer: descarga `.deb` de NetAcad → `~/Downloads/` → `dev-tools.sh`
 
 - fastfetch sin logo
 - zsh tema `robbyrussell` (no pokemon)
-- wallpaper: león (`assets/wallpapers/wallpaper.jpg`)
-- colores sobrios gris/azul
+- wallpaper: ML4W por defecto (`assets/wallpapers/ml4w-default.jpg`)
+- colores: tema oficial ML4W (bordes cyan/verde, waybar blanca)
