@@ -47,12 +47,30 @@ if [[ ! -s "$WALL_FILE" ]]; then
 fi
 echo "Wallpaper OK: $WALL_FILE ($(du -h "$WALL_FILE" | cut -f1))"
 
-# hyprpaper — ruta ABSOLUTA (~ no siempre funciona)
+# Detectar monitor (Lenovo suele ser eDP-1)
+MONITOR="eDP-1"
+if command -v hyprctl &>/dev/null && [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+  MONITOR="$(hyprctl monitors 2>/dev/null | awk '/^Monitor/{print $2; exit}')"
+  [[ -z "$MONITOR" ]] && MONITOR="eDP-1"
+fi
+echo "Monitor: $MONITOR"
+
+# hyprpaper 0.8+ — sintaxis nueva (la vieja preload/wallpaper = ya NO funciona)
 mkdir -p "$HOME/.config/hypr"
 cat > "$HOME/.config/hypr/hyprpaper.conf" << EOF
-preload = ${WALL_FILE}
-wallpaper = ,${WALL_FILE}
 splash = false
+
+wallpaper {
+    monitor = ${MONITOR}
+    path = ${WALL_FILE}
+    fit_mode = cover
+}
+
+wallpaper {
+    monitor =
+    path = ${WALL_FILE}
+    fit_mode = cover
+}
 EOF
 
 # GTK + iconos (carpetas azules Papirus)
@@ -73,7 +91,8 @@ if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
   pkill hyprpaper 2>/dev/null || true
   sleep 1
   hyprpaper &
-  sleep 1
+  sleep 2
+  hyprctl hyprpaper wallpaper "${MONITOR},${WALL_FILE},cover" 2>/dev/null || true
   pkill -SIGUSR2 waybar 2>/dev/null || true
   hyprctl reload 2>/dev/null || true
 fi
